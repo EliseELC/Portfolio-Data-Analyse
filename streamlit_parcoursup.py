@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import plotly.express as px
 import matplotlib.pyplot as plt
 
 st.set_page_config(
@@ -626,3 +627,77 @@ ax.set_xlabel("Capacité")
 ax.set_ylabel("Candidats")
 
 st.pyplot(fig)
+
+st.subheader("📌 Demande vs sélectivité des formations")
+
+st.code("""
+compare = (
+    df_plot
+    .groupby('nom_formation')
+    .agg({
+        'effectif_total_candidats':'sum',
+        'taux_d’accès':'mean'
+    })
+    .dropna()
+    .sort_values('effectif_total_candidats', ascending=False)
+    .head(10)
+)
+
+plt.figure(figsize=(10,6))
+
+sns.scatterplot(
+    data=compare,
+    x='effectif_total_candidats',
+    y='taux_d’accès',
+    s=100
+)
+
+for i, txt in enumerate(compare.index):
+    plt.text(
+        compare['effectif_total_candidats'][i],
+        compare['taux_d’accès'][i],
+        txt,
+        fontsize=8
+    )
+
+plt.title("Demande vs sélectivité (Top 10 formations)")
+plt.xlabel("Nombre de candidats")
+plt.ylabel("Taux d'accès (%)")
+
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+compare = (
+    df_plot
+    .groupby('nom_formation')
+    .agg({
+        'effectif_total_candidats':'sum',
+        'taux_d’accès':'mean'
+    })
+    .dropna()
+    .sort_values('effectif_total_candidats', ascending=False)
+    .head(10)
+)
+
+fig = px.scatter(
+    compare,
+    x='effectif_total_candidats',
+    y='taux_d’accès',
+    text=compare.index,
+    size='effectif_total_candidats',
+    color='taux_d’accès',
+    color_continuous_scale='Viridis',
+    hover_name=compare.index,
+    title="Demande vs sélectivité (Top 10 formations)"
+)
+
+fig.update_traces(
+    textposition='top center',
+    hovertemplate=
+    "<b>%{hovertext}</b><br>" +
+    "Candidats : %{x:,}<br>" +
+    "Taux d'accès : %{y:.1f}%<extra></extra>"
+)
+
+st.plotly_chart(fig, use_container_width=True)
