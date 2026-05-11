@@ -12,10 +12,8 @@ st.set_page_config(
 
 @st.cache_data
 def load_data():
-    chemin = r"\\frfs.sedes.inditex.grp\Rhome$\eliselc.SEDES\Mis Documentos\GitHub\Portfolio-Data-Analyse\fr-esr-parcoursup.csv"
-
     df = pd.read_csv(
-        chemin,
+        "fr-esr-parcoursup.csv",
         sep=";",
         encoding="utf-8",
         engine="python",
