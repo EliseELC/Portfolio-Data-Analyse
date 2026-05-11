@@ -701,3 +701,398 @@ fig.update_traces(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+st.subheader("🚨 Outliers : formations avec moins de candidats que de capacité")
+
+st.code("""
+df_out = df.copy()
+
+df_out['capacite_formation'] = pd.to_numeric(
+    df_out['capacite_formation'],
+    errors='coerce'
+)
+
+df_out['effectif_total_candidats'] = pd.to_numeric(
+    df_out['effectif_total_candidats'],
+    errors='coerce'
+)
+
+outliers = df_out[
+    (df_out['effectif_total_candidats'] < df_out['capacite_formation'])
+]
+
+outliers[[
+    'nom_formation_detaille',
+    'region',
+    'etablissement',
+    'type_formation',
+    'capacite_formation',
+    'effectif_total_candidats'
+]]
+""", language="python")
+
+df_out = df.copy()
+
+df_out['capacite_formation'] = pd.to_numeric(
+    df_out['capacite_formation'],
+    errors='coerce'
+)
+
+df_out['effectif_total_candidats'] = pd.to_numeric(
+    df_out['effectif_total_candidats'],
+    errors='coerce'
+)
+
+outliers = df_out[
+    (df_out['effectif_total_candidats'] < df_out['capacite_formation'])
+]
+
+st.dataframe(
+    outliers[[
+        'nom_formation_detaille',
+        'region',
+        'etablissement',
+        'type_formation',
+        'capacite_formation',
+        'effectif_total_candidats'
+    ]],
+    use_container_width=True
+)
+
+fig = px.scatter(
+    outliers,
+    x='capacite_formation',
+    y='effectif_total_candidats',
+    color='type_formation',
+    hover_data=[
+        'nom_formation_detaille',
+        'region',
+        'etablissement'
+    ],
+    title="Outliers : moins de candidats que de capacité"
+)
+
+fig.update_layout(
+    xaxis_title="Capacité",
+    yaxis_title="Nombre de candidats"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.subheader("🌍 Répartition par région et inégalités géographiques")
+
+st.code("""
+top_regions = df_plot['region'].value_counts().head(10)
+
+plt.figure(figsize=(10,6))
+
+sns.set_theme(style="whitegrid")
+palette = sns.color_palette("viridis", len(top_regions))
+
+ax = sns.barplot(x=top_regions.values, y=top_regions.index)
+
+for bar in ax.patches:
+    ax.annotate(
+        f"{int(bar.get_width())}",
+        (bar.get_width(), bar.get_y() + bar.get_height()/2),
+        va='center',
+        ha='left',
+        xytext=(5,0),
+        textcoords='offset points'
+    )
+
+plt.title("Top 10 des régions avec le plus de formations")
+plt.xlabel("Nombre de formations")
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+top_regions = df_plot['region'].value_counts().head(10)
+
+fig = px.bar(
+    x=top_regions.values,
+    y=top_regions.index,
+    orientation='h',
+    color=top_regions.values,
+    color_continuous_scale='Viridis',
+    text=top_regions.values,
+    labels={'x':'Nombre de formations','y':''},
+    title='Top 10 des régions avec le plus de formations'
+)
+
+fig.update_traces(
+    texttemplate='%{text:,}',
+    textposition='outside',
+    hovertemplate='<b>%{y}</b><br>Formations : %{x:,}<extra></extra>'
+)
+
+fig.update_layout(
+    yaxis={'categoryorder':'total ascending'},
+    plot_bgcolor='white'
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("""
+L'Île-de-France est la région avec le plus grand nombre de formations puisqu'elle possède presque 1000 formations de plus que la deuxième région.
+""")
+
+st.subheader("🗺️ Répartition des formations par région et type")
+
+st.code("""
+sns.set_theme(style="white")
+
+pivot = pd.crosstab(df_plot['region'], df_plot['type_formation'])
+
+f, ax = plt.subplots(figsize=(12, 8))
+
+sns.heatmap(
+    pivot,
+    annot=True,
+    fmt="d",
+    linewidths=0.5,
+    cmap='coolwarm',
+    linecolor='white',
+    cbar_kws={"shrink": 0.8},
+    ax=ax
+)
+
+plt.title("Répartition des formations par région et type", fontsize=14, weight='bold')
+plt.xlabel("Type de formation")
+plt.ylabel("Région")
+
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+pivot = pd.crosstab(df_plot['region'], df_plot['type_formation'])
+
+fig = px.imshow(
+    pivot,
+    text_auto=True,
+    aspect="auto",
+    color_continuous_scale='RdBu',
+    labels=dict(
+        x="Type de formation",
+        y="Région",
+        color="Nombre"
+    ),
+    title="Répartition des formations par région et type"
+)
+
+fig.update_layout(
+    plot_bgcolor='white'
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("""
+L'Île-de-France est presque systématiquement la région qui possède le plus de formations  
+(sauf pour les PASS).
+""")
+
+st.subheader("🎓 Comparaison des admis selon l'origine académique")
+
+
+
+cols = [
+    'dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)',
+    'dont_effectif_des_admis_issus_de_la_même_academie'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot = df_plot.dropna(subset=cols)
+
+totaux = df_plot[cols].sum()
+
+labels = [
+    "Paris / Créteil / Versailles",
+    "Même académie"
+]
+
+fig = px.bar(
+    x=labels,
+    y=totaux.values,
+    color=labels,
+    text=totaux.values
+)
+
+fig.update_traces(
+    texttemplate='%{text:,}',
+    textposition='outside',
+    hovertemplate=
+    "<b>%{x}</b><br>" +
+    "Admis : %{y:,}<extra></extra>"
+)
+
+fig.update_layout(
+    title="Comparaison des admis selon l'origine académique",
+    showlegend=False
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="origine_academique"
+)
+
+st.subheader("Admis PCV vs autres académies")
+
+df_plot = df.copy()
+
+df_plot['academie'] = (
+    df_plot['academie']
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
+
+df_plot = df_plot[
+    df_plot['academie'].isin(['paris', 'creteil', 'versailles'])
+]
+
+cols = [
+    'dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)',
+    'effectif_des_admis_en_phase_principale',
+    'effectif_des_admis_en_phase_complementaire'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot['total_admis'] = (
+    df_plot['effectif_des_admis_en_phase_principale'].fillna(0) +
+    df_plot['effectif_des_admis_en_phase_complementaire'].fillna(0)
+)
+
+df_plot['admis_pcv'] = (
+    df_plot['dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)']
+    .fillna(0)
+)
+
+df_plot['admis_autres'] = (
+    df_plot['total_admis'] - df_plot['admis_pcv']
+)
+
+agg = (
+    df_plot
+    .groupby('type_formation')[['admis_pcv', 'admis_autres']]
+    .sum()
+    .reset_index()
+)
+
+agg_melt = agg.melt(
+    id_vars='type_formation',
+    value_vars=['admis_pcv', 'admis_autres'],
+    var_name='origine',
+    value_name='nb_admis'
+)
+
+fig = px.line(
+    agg_melt,
+    x='type_formation',
+    y='nb_admis',
+    color='origine',
+    markers=True
+)
+
+fig.update_traces(
+    hovertemplate=
+    "<b>%{x}</b><br>" +
+    "%{fullData.name} : %{y:,}<extra></extra>"
+)
+
+fig.update_layout(
+    title="Admis PCV vs autres (formations Paris / Créteil / Versailles)",
+    xaxis_title="Type de formation",
+    yaxis_title="Nombre d'admis",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="pcv_vs_autres"
+)
+
+st.markdown("""
+On remarque que pour les formations dans les académies de Créteil, Paris et Versailles la majorité des formations ont admis plus de candidats étant néobacheliers dans ces académies sauf pour les autres formations, les IFSI et les EFTS.
+
+On remarque également que le nombre d'admis dans les licences est quasiment identique pour tous les néobacheliers admis.
+""")
+
+st.subheader("📈 Admis PCV vs autres (toutes formations)")
+
+df_plot = df.copy()
+
+cols = [
+    'dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)',
+    'effectif_des_admis_en_phase_principale',
+    'effectif_des_admis_en_phase_complementaire'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot['total_admis'] = (
+    df_plot['effectif_des_admis_en_phase_principale'].fillna(0) +
+    df_plot['effectif_des_admis_en_phase_complementaire'].fillna(0)
+)
+
+df_plot['admis_pcv'] = (
+    df_plot['dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)']
+    .fillna(0)
+)
+
+df_plot['admis_autres'] = (
+    df_plot['total_admis'] - df_plot['admis_pcv']
+)
+
+agg = (
+    df_plot
+    .groupby('type_formation')[['admis_pcv', 'admis_autres']]
+    .sum()
+    .reset_index()
+)
+
+agg_melt = agg.melt(
+    id_vars='type_formation',
+    value_vars=['admis_pcv', 'admis_autres'],
+    var_name='origine',
+    value_name='nb_admis'
+)
+
+fig = px.line(
+    agg_melt,
+    x='type_formation',
+    y='nb_admis',
+    color='origine',
+    markers=True
+)
+
+fig.update_traces(
+    hovertemplate=
+    "<b>%{x}</b><br>" +
+    "%{fullData.name} : %{y:,}<extra></extra>"
+)
+
+fig.update_layout(
+    title="Admis PCV vs autres (toutes formations)",
+    xaxis_title="Type de formation",
+    yaxis_title="Nombre d'admis",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="pcv_vs_autres_all"
+)
