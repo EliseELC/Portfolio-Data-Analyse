@@ -310,3 +310,319 @@ ax.set_xlabel("Nombre de candidats")
 ax.set_ylabel("")
 
 st.pyplot(fig)
+
+st.markdown("""
+Les licences sont donc le type de formation le plus demandée, on retrouve ensuite les BTS, les IFSI et les BUT.
+""")
+
+st.subheader("Top 10 des formations les plus demandées")
+
+st.code("""
+top_formations = (
+    df_plot
+    .groupby('nom_complet_formation')['effectif_total_candidats']
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+sns.set_theme(style="whitegrid")
+
+palette = sns.color_palette("viridis", len(top_formations)) 
+
+plt.figure(figsize=(15,6))
+ax = sns.barplot(x=top_formations.values, y=top_formations.index)
+
+for bar in ax.patches:
+    ax.annotate(
+        f"{int(bar.get_width())}",
+        (bar.get_width(), bar.get_y() + bar.get_height()/2),
+        va='center', ha='left', xytext=(5,0), textcoords='offset points'
+    )
+
+plt.title("Top 10 des formations les plus demandées")
+plt.xlabel("Nombre de candidats")
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+top_formations = (
+    df_plot
+    .groupby('nom_complet_formation')['effectif_total_candidats']
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+sns.set_theme(style="whitegrid")
+
+palette = sns.color_palette("viridis", len(top_formations)) 
+
+fig, ax = plt.subplots(figsize=(15,6))
+
+sns.barplot(
+    x=top_formations.values,
+    y=top_formations.index,
+    palette=palette,
+    ax=ax
+)
+
+for bar in ax.patches:
+    ax.annotate(
+        f"{int(bar.get_width())}",
+        (bar.get_width(), bar.get_y() + bar.get_height()/2),
+        va='center',
+        ha='left',
+        xytext=(5,0),
+        textcoords='offset points'
+    )
+
+ax.set_title("Top 10 des formations les plus demandées")
+ax.set_xlabel("Nombre de candidats")
+
+st.pyplot(fig)
+
+st.subheader("Répartition des types de formation par nombre de candidatures")
+
+st.code("""
+type_counts = df_plot['type_formation'].value_counts()
+
+colors = sns.color_palette("tab20", len(type_counts))
+
+fig, ax = plt.subplots(figsize=(9,9))
+
+wedges, texts, autotexts = ax.pie(
+    type_counts.values,
+    labels=None,
+    colors=colors,
+    startangle=90,
+    autopct=lambda p: f"{p:.1f}%" if p >= 2 else "",
+    pctdistance=0.7,
+    wedgeprops=dict(edgecolor='white', linewidth=1)
+)
+
+ax.legend(
+    wedges,
+    type_counts.index,
+    title="Type de formation",
+    loc="center left",
+    bbox_to_anchor=(1, 0.5)
+)
+
+for autotext in autotexts:
+    autotext.set_color("white")
+    autotext.set_fontsize(10)
+    autotext.set_weight("bold")
+
+plt.title("Répartition des types de formation", fontsize=14, weight='bold')
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+type_counts = df_plot['type_formation'].value_counts()
+
+colors = sns.color_palette("tab20", len(type_counts))
+
+fig, ax = plt.subplots(figsize=(9,9))
+
+wedges, texts, autotexts = ax.pie(
+    type_counts.values,
+    labels=None,
+    colors=colors,
+    startangle=90,
+    autopct=lambda p: f"{p:.1f}%" if p >= 2 else "",
+    pctdistance=0.7,
+    wedgeprops=dict(edgecolor='white', linewidth=1)
+)
+
+ax.legend(
+    wedges,
+    type_counts.index,
+    title="Type de formation",
+    loc="center left",
+    bbox_to_anchor=(1, 0.5)
+)
+
+for autotext in autotexts:
+    autotext.set_color("white")
+    autotext.set_fontsize(10)
+    autotext.set_weight("bold")
+
+ax.set_title("Répartition des types de formation", fontsize=14, weight='bold')
+
+st.pyplot(fig)
+
+st.subheader("Étude de la sélectivité et des taux d'accès des formations")
+
+st.code("""
+plt.figure(figsize=(10,6))
+sns.boxplot(data=df_plot, x='type_formation', y='taux_d’accès')
+
+plt.xticks(rotation=45, ha='right')
+plt.title("Distribution du taux d'accès par type de formation")
+
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+fig, ax = plt.subplots(figsize=(10,6))
+
+sns.boxplot(
+    data=df_plot,
+    x='type_formation',
+    y='taux_d’accès',
+    ax=ax
+)
+
+plt.xticks(rotation=45, ha='right')
+
+ax.set_title("Distribution du taux d'accès par type de formation")
+
+st.pyplot(fig)
+
+st.subheader("📊 Capacité vs nombre de candidats")
+
+st.code("""
+agg = (
+    df_plot
+    .groupby('type_formation')
+    .agg({
+        'capacite_formation': 'sum',
+        'effectif_total_candidats': 'sum'
+    })
+    .reset_index()
+)
+
+agg_melt = agg.melt(
+    id_vars='type_formation',
+    value_vars=['capacite_formation', 'effectif_total_candidats'],
+    var_name='variable',
+    value_name='valeur'
+)
+
+sns.set_theme(style="whitegrid")
+
+plt.figure(figsize=(12,6))
+
+sns.lineplot(
+    data=agg_melt,
+    x='type_formation',
+    y='valeur',
+    hue='variable',
+    marker='o'
+)
+
+for _, row in agg_melt.iterrows():
+    plt.text(
+        row.name % len(agg),
+        row['valeur'],
+        f"{int(row['valeur'])}",
+        ha='center',
+        va='bottom',
+        fontsize=8
+    )
+
+plt.xticks(rotation=45, ha='right')
+plt.title("Capacité vs Candidats par type de formation")
+plt.xlabel("Type de formation")
+plt.ylabel("Nombre")
+
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+agg = (
+    df_plot
+    .groupby('type_formation')
+    .agg({
+        'capacite_formation': 'sum',
+        'effectif_total_candidats': 'sum'
+    })
+    .reset_index()
+)
+
+agg_melt = agg.melt(
+    id_vars='type_formation',
+    value_vars=['capacite_formation', 'effectif_total_candidats'],
+    var_name='variable',
+    value_name='valeur'
+)
+
+fig, ax = plt.subplots(figsize=(12,6))
+
+sns.lineplot(
+    data=agg_melt,
+    x='type_formation',
+    y='valeur',
+    hue='variable',
+    marker='o',
+    ax=ax
+)
+
+for _, row in agg_melt.iterrows():
+    ax.text(
+        row.name % len(agg),
+        row['valeur'],
+        f"{int(row['valeur'])}",
+        ha='center',
+        va='bottom',
+        fontsize=8
+    )
+
+plt.xticks(rotation=45, ha='right')
+
+ax.set_title("Capacité vs Candidats par type de formation")
+ax.set_xlabel("Type de formation")
+ax.set_ylabel("Nombre")
+
+st.pyplot(fig)
+
+st.subheader("Corrélation capacité vs nombre de candidats")
+
+st.code("""
+plt.figure(figsize=(10,6))
+
+sns.scatterplot(
+    data=df_plot,
+    x='capacite_formation',
+    y='effectif_total_candidats',
+    hue='type_formation',
+    style='type_formation',
+    palette='tab10',
+    markers=['o','s','D','^','v','P','X'],
+    alpha=0.8,
+    s=80
+)
+
+plt.xlim(0, 1000)
+
+plt.title("Capacité vs nombre de candidats")
+plt.xlabel("Capacité")
+plt.ylabel("Candidats")
+
+plt.tight_layout()
+plt.show()
+""", language="python")
+
+fig, ax = plt.subplots(figsize=(10,6))
+
+sns.scatterplot(
+    data=df_plot,
+    x='capacite_formation',
+    y='effectif_total_candidats',
+    hue='type_formation',
+    style='type_formation',
+    palette='tab10',
+    markers=['o','s','D','^','v','P','X'],
+    alpha=0.8,
+    s=80,
+    ax=ax
+)
+
+plt.xlim(0, 1000)
+
+ax.set_title("Capacité vs nombre de candidats")
+ax.set_xlabel("Capacité")
+ax.set_ylabel("Candidats")
+
+st.pyplot(fig)
