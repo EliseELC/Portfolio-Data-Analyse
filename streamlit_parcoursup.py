@@ -1,14 +1,34 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import plotly.express as px
-import matplotlib.pyplot as plt
 
 st.set_page_config(
     page_title="Analyse Parcoursup",
     layout="wide"
 )
+
+PASTEL_SCALE = [
+    [0.0, "#FADADD"],
+    [0.2, "#F8C8DC"],
+    [0.4, "#CDB4DB"],
+    [0.6, "#A2D2FF"],
+    [0.8, "#BDE0FE"],
+    [1.0, "#CFFFE5"]
+]
+
+PASTEL_COLORS = [
+    "#A2D2FF",
+    "#F8C8DC",
+    "#CDB4DB",
+    "#FFD6A5",
+    "#BDE0FE",
+    "#CFFFE5",
+    "#FADADD",
+    "#FDFFB6",
+    "#CAFFBF",
+    "#FFC6FF"
+]
 
 @st.cache_data
 def load_data():
@@ -19,17 +39,17 @@ def load_data():
         engine="python",
         on_bad_lines="skip"
     )
-
     return df
 
 df = load_data()
 
 st.title("Analyse des données de candidature Parcoursup (session 2025)")
+
 st.markdown("""
 Bienvenue dans cette analyse exploratoire des données Parcoursup.  
 Cette application permet d'étudier les formations, les profils des admis et les dynamiques de sélection.
 """)
-st.header("Première étape: Nettoyage")
+
 df.columns = (
     df.columns
     .str.strip()
@@ -38,42 +58,6 @@ df.columns = (
     .str.replace("'", "")
     .str.replace("é", "e")
 )
-
-st.subheader("Renommage des colonnes")
-st.code("""#Uniformiser le nom des colonnes
-df.columns = (
-    df.columns
-    .str.strip()
-    .str.lower()
-    .str.replace(" ", "_")
-    .str.replace("'", "")
-    .str.replace("é", "e")
-)
-""", language="python")
-
-st.subheader("🔤 Renommage des colonnes")
-
-st.code("""
-# Changer le nom des colonnes trop longues
-df.rename(columns={
-    'code_uai_de_letablissement': 'code_uai',
-    'statut_de_l’etablissement_de_la_filière_de_formation_(public,_prive…)': 'statut_etablissment',
-    'code_departemental_de_l’etablissement': 'code_departemental',
-    'departement_de_l’etablissement': 'departement',
-    'region_de_l’etablissement': 'region',
-    'academie_de_l’etablissement': 'academie',
-    'commune_de_l’etablissement': 'commune',
-    'filière_de_formation_detaillee': 'nom_complet_formation',
-    'filière_de_formation_très_agregee': 'type_formation',
-    'filière_de_formation.1': 'nom_formation',
-    'filière_de_formation_detaillee_bis': 'nom_formation_bis',
-    'filière_de_formation_très_detaillee': 'nom_formation_detaille',
-    'coordonnees_gps_de_la_formation': 'coordonnes_gps',
-    'capacite_de_l’etablissement_par_formation': 'capacite_formation',
-    'effectif_total_des_candidats_pour_une_formation': 'effectif_total_candidats',
-    'dont_effectif_des_candidates_pour_une_formation': 'nombre_candidates'
-}, inplace=True)
-""", language="python")
 
 df.rename(columns={
     'code_uai_de_letablissement': 'code_uai',
@@ -96,96 +80,22 @@ df.rename(columns={
 
 df_plot = df.copy()
 
-ancien_nouveaux = pd.DataFrame({
-    "Ancien nom": [
-        'code_uai_de_letablissement',
-        'statut_de_l’etablissement_de_la_filière_de_formation_(public,_prive…)',
-        'code_departemental_de_l’etablissement',
-        'departement_de_l’etablissement',
-        'region_de_l’etablissement',
-        'academie_de_l’etablissement',
-        'commune_de_l’etablissement',
-        'filière_de_formation_detaillee',
-        'filière_de_formation_très_agregee',
-        'filière_de_formation.1',
-        'filière_de_formation_detaillee_bis',
-        'filière_de_formation_très_detaillee',
-        'coordonnees_gps_de_la_formation',
-        'capacite_de_l’etablissement_par_formation',
-        'effectif_total_des_candidats_pour_une_formation',
-        'dont_effectif_des_candidates_pour_une_formation'
-    ],
-    "Nouveau nom": [
-        'code_uai',
-        'statut_etablissment',
-        'code_departemental',
-        'departement',
-        'region',
-        'academie',
-        'commune',
-        'nom_complet_formation',
-        'type_formation',
-        'nom_formation',
-        'nom_formation_bis',
-        'nom_formation_detaille',
-        'coordonnes_gps',
-        'capacite_formation',
-        'effectif_total_candidats',
-        'nombre_candidates'
-    ]
-})
-
-st.dataframe(ancien_nouveaux, use_container_width=True)
-
-st.subheader("🔎 Exploration des données")
-
-st.code("""
-print(df.head())
-print(df.columns.tolist())
-print(df.info())
-
-df.dtypes
-""", language="python")
-
-st.dataframe(df.head())
-
-st.subheader("Exploration")
-
-st.code("""#Création d'une copie du df
-df_plot = df.copy()
-
 df_plot['taux_d’accès'] = pd.to_numeric(
-    df_plot['taux_d’accès'], errors='coerce'
+    df_plot['taux_d’accès'],
+    errors='coerce'
 )
 
 df_plot['capacite_formation'] = pd.to_numeric(
-    df_plot['capacite_formation'], errors='coerce'
+    df_plot['capacite_formation'],
+    errors='coerce'
 )
 
 df_plot['effectif_total_candidats'] = pd.to_numeric(
-    df_plot['effectif_total_candidats'], errors='coerce'
-)
-""", language="python")
-
-df_plot['taux_d’accès'] = pd.to_numeric(
-    df_plot['taux_d’accès'], errors='coerce'
+    df_plot['effectif_total_candidats'],
+    errors='coerce'
 )
 
-df_plot['capacite_formation'] = pd.to_numeric(
-    df_plot['capacite_formation'], errors='coerce'
-)
-
-df_plot['effectif_total_candidats'] = pd.to_numeric(
-    df_plot['effectif_total_candidats'], errors='coerce'
-)
-
-st.subheader("Calcul du nombre total de candidats")
-
-st.code("""
-total_candidats = df_plot['effectif_total_candidats'].sum()
-
-total_candidats
-""", language="python")
+st.header("Chiffres clés")
 
 total_candidats = df_plot['effectif_total_candidats'].sum()
 
@@ -194,20 +104,6 @@ st.metric(
     f"{int(total_candidats):,}".replace(",", " ")
 )
 
-st.markdown("""
-Il y a donc eu 13 502 385 candidatures pour les formations.  
-Un candidat a la possibilité de faire au moins 10 voeux et 10 de plus pour des formations spécifiques (BTS, BUT...).  
-Selon le site de l'enseignement supérieur en 2025 près de 980 000 candidats avaient confirmé au moins un voeu.
-""")
-
-st.subheader("🏫 Calcul du nombre total de formations")
-
-st.code("""
-total_formations = len(df_plot)
-
-total_formations
-""", language="python")
-
 total_formations = len(df_plot)
 
 st.metric(
@@ -215,50 +111,13 @@ st.metric(
     f"{int(total_formations):,}".replace(",", " ")
 )
 
-st.header("Deuxième étape : Visualisations")
+st.header("Visualisations")
 
-st.subheader("1.Formations les plus demandées")
+# =========================
+# TYPES DE FORMATIONS
+# =========================
 
-st.code("""
-top_formations = (
-    df_plot.groupby('type_formation')['effectif_total_candidats']
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-)
-
-sns.set_theme(style="whitegrid")
-
-palette = sns.color_palette("viridis", len(top_formations))
-
-plt.figure(figsize=(11,6))
-ax = sns.barplot(x=top_formations.values, y=top_formations.index, palette=palette)
-
-max_val = top_formations.values.max()
-plt.xlim(0, max_val * 1.15)
-
-for bar in ax.patches:
-    width = bar.get_width()
-    ax.annotate(
-        f"{int(width):,}".replace(",", " "),
-        (width, bar.get_y() + bar.get_height()/2),
-        va='center',
-        ha='left',
-        xytext=(8, 0),
-        textcoords='offset points',
-        fontsize=9,
-        fontweight='bold'
-    )
-
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-
-plt.title("Top 10 du type de formation les plus demandées", fontsize=14, weight='bold')
-plt.xlabel("Nombre de candidats")
-plt.ylabel("")
-plt.tight_layout()
-plt.show()
-""", language="python")
+st.subheader("Types de formations les plus demandés")
 
 top_formations = (
     df_plot.groupby('type_formation')['effectif_total_candidats']
@@ -267,56 +126,37 @@ top_formations = (
     .head(10)
 )
 
-sns.set_theme(style="whitegrid")
-
-palette = sns.color_palette("viridis", len(top_formations))
-
-fig, ax = plt.subplots(figsize=(11,6))
-
-sns.barplot(
+fig = px.bar(
     x=top_formations.values,
     y=top_formations.index,
-    palette=palette,
-    ax=ax
+    orientation='h',
+    color=top_formations.values,
+    text=top_formations.values,
+    color_continuous_scale=PASTEL_SCALE
 )
 
-max_val = top_formations.values.max()
-plt.xlim(0, max_val * 1.15)
-
-for bar in ax.patches:
-    width = bar.get_width()
-    ax.annotate(
-        f"{int(width):,}".replace(",", " "),
-        (width, bar.get_y() + bar.get_height()/2),
-        va='center',
-        ha='left',
-        xytext=(8, 0),
-        textcoords='offset points',
-        fontsize=9,
-        fontweight='bold'
-    )
-
-ax.spines['right'].set_visible(False)
-ax.spines['top'].set_visible(False)
-
-ax.set_title(
-    "Top 10 du type de formation les plus demandées",
-    fontsize=14,
-    weight='bold'
+fig.update_traces(
+    texttemplate='%{text:,}',
+    textposition='outside'
 )
 
-ax.set_xlabel("Nombre de candidats")
-ax.set_ylabel("")
+fig.update_layout(
+    title="Top 10 des types de formation",
+    yaxis={'categoryorder':'total ascending'}
+)
 
-st.pyplot(fig)
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="top_types_formations"
+)
 
-st.markdown("""
-Les licences sont donc le type de formation le plus demandée, on retrouve ensuite les BTS, les IFSI et les BUT.
-""")
+# =========================
+# TOP FORMATIONS
+# =========================
 
 st.subheader("Top 10 des formations les plus demandées")
 
-st.code("""
 top_formations = (
     df_plot
     .groupby('nom_complet_formation')['effectif_total_candidats']
@@ -325,210 +165,86 @@ top_formations = (
     .head(10)
 )
 
-sns.set_theme(style="whitegrid")
-
-palette = sns.color_palette("viridis", len(top_formations)) 
-
-plt.figure(figsize=(15,6))
-ax = sns.barplot(x=top_formations.values, y=top_formations.index)
-
-for bar in ax.patches:
-    ax.annotate(
-        f"{int(bar.get_width())}",
-        (bar.get_width(), bar.get_y() + bar.get_height()/2),
-        va='center', ha='left', xytext=(5,0), textcoords='offset points'
-    )
-
-plt.title("Top 10 des formations les plus demandées")
-plt.xlabel("Nombre de candidats")
-plt.tight_layout()
-plt.show()
-""", language="python")
-
-top_formations = (
-    df_plot
-    .groupby('nom_complet_formation')['effectif_total_candidats']
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-)
-
-sns.set_theme(style="whitegrid")
-
-palette = sns.color_palette("viridis", len(top_formations)) 
-
-fig, ax = plt.subplots(figsize=(15,6))
-
-sns.barplot(
+fig = px.bar(
     x=top_formations.values,
     y=top_formations.index,
-    palette=palette,
-    ax=ax
+    orientation='h',
+    color=top_formations.values,
+    text=top_formations.values,
+    color_continuous_scale=PASTEL_SCALE
 )
 
-for bar in ax.patches:
-    ax.annotate(
-        f"{int(bar.get_width())}",
-        (bar.get_width(), bar.get_y() + bar.get_height()/2),
-        va='center',
-        ha='left',
-        xytext=(5,0),
-        textcoords='offset points'
-    )
-
-ax.set_title("Top 10 des formations les plus demandées")
-ax.set_xlabel("Nombre de candidats")
-
-st.pyplot(fig)
-
-st.subheader("Répartition des types de formation par nombre de candidatures")
-
-st.code("""
-type_counts = df_plot['type_formation'].value_counts()
-
-colors = sns.color_palette("tab20", len(type_counts))
-
-fig, ax = plt.subplots(figsize=(9,9))
-
-wedges, texts, autotexts = ax.pie(
-    type_counts.values,
-    labels=None,
-    colors=colors,
-    startangle=90,
-    autopct=lambda p: f"{p:.1f}%" if p >= 2 else "",
-    pctdistance=0.7,
-    wedgeprops=dict(edgecolor='white', linewidth=1)
+fig.update_traces(
+    texttemplate='%{text:,}',
+    textposition='outside'
 )
 
-ax.legend(
-    wedges,
-    type_counts.index,
-    title="Type de formation",
-    loc="center left",
-    bbox_to_anchor=(1, 0.5)
+fig.update_layout(
+    title="Top 10 des formations les plus demandées",
+    yaxis={'categoryorder':'total ascending'}
 )
 
-for autotext in autotexts:
-    autotext.set_color("white")
-    autotext.set_fontsize(10)
-    autotext.set_weight("bold")
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="top_formations"
+)
 
-plt.title("Répartition des types de formation", fontsize=14, weight='bold')
-plt.tight_layout()
-plt.show()
-""", language="python")
+# =========================
+# PIE CHART
+# =========================
+
+st.subheader("Répartition des types de formation")
 
 type_counts = df_plot['type_formation'].value_counts()
 
-colors = sns.color_palette("tab20", len(type_counts))
-
-fig, ax = plt.subplots(figsize=(9,9))
-
-wedges, texts, autotexts = ax.pie(
-    type_counts.values,
-    labels=None,
-    colors=colors,
-    startangle=90,
-    autopct=lambda p: f"{p:.1f}%" if p >= 2 else "",
-    pctdistance=0.7,
-    wedgeprops=dict(edgecolor='white', linewidth=1)
+fig = px.pie(
+    values=type_counts.values,
+    names=type_counts.index,
+    hole=0.4,
+    color_discrete_sequence=PASTEL_COLORS
 )
 
-ax.legend(
-    wedges,
-    type_counts.index,
-    title="Type de formation",
-    loc="center left",
-    bbox_to_anchor=(1, 0.5)
+fig.update_traces(
+    textinfo='percent+label'
 )
 
-for autotext in autotexts:
-    autotext.set_color("white")
-    autotext.set_fontsize(10)
-    autotext.set_weight("bold")
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="pie_types"
+)
 
-ax.set_title("Répartition des types de formation", fontsize=14, weight='bold')
+# =========================
+# BOXPLOT
+# =========================
 
-st.pyplot(fig)
+st.subheader("Distribution du taux d'accès")
 
-st.subheader("Étude de la sélectivité et des taux d'accès des formations")
-
-st.code("""
-plt.figure(figsize=(10,6))
-sns.boxplot(data=df_plot, x='type_formation', y='taux_d’accès')
-
-plt.xticks(rotation=45, ha='right')
-plt.title("Distribution du taux d'accès par type de formation")
-
-plt.tight_layout()
-plt.show()
-""", language="python")
-
-fig, ax = plt.subplots(figsize=(10,6))
-
-sns.boxplot(
-    data=df_plot,
+fig = px.box(
+    df_plot,
     x='type_formation',
     y='taux_d’accès',
-    ax=ax
+    color='type_formation',
+    color_discrete_sequence=PASTEL_COLORS
 )
 
-plt.xticks(rotation=45, ha='right')
-
-ax.set_title("Distribution du taux d'accès par type de formation")
-
-st.pyplot(fig)
-
-st.subheader("📊 Capacité vs nombre de candidats")
-
-st.code("""
-agg = (
-    df_plot
-    .groupby('type_formation')
-    .agg({
-        'capacite_formation': 'sum',
-        'effectif_total_candidats': 'sum'
-    })
-    .reset_index()
+fig.update_layout(
+    xaxis_tickangle=-45,
+    showlegend=False
 )
 
-agg_melt = agg.melt(
-    id_vars='type_formation',
-    value_vars=['capacite_formation', 'effectif_total_candidats'],
-    var_name='variable',
-    value_name='valeur'
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="boxplot"
 )
 
-sns.set_theme(style="whitegrid")
+# =========================
+# LINEPLOT
+# =========================
 
-plt.figure(figsize=(12,6))
-
-sns.lineplot(
-    data=agg_melt,
-    x='type_formation',
-    y='valeur',
-    hue='variable',
-    marker='o'
-)
-
-for _, row in agg_melt.iterrows():
-    plt.text(
-        row.name % len(agg),
-        row['valeur'],
-        f"{int(row['valeur'])}",
-        ha='center',
-        va='bottom',
-        fontsize=8
-    )
-
-plt.xticks(rotation=45, ha='right')
-plt.title("Capacité vs Candidats par type de formation")
-plt.xlabel("Type de formation")
-plt.ylabel("Nombre")
-
-plt.tight_layout()
-plt.show()
-""", language="python")
+st.subheader("Capacité vs nombre de candidats")
 
 agg = (
     df_plot
@@ -547,124 +263,60 @@ agg_melt = agg.melt(
     value_name='valeur'
 )
 
-fig, ax = plt.subplots(figsize=(12,6))
-
-sns.lineplot(
-    data=agg_melt,
+fig = px.line(
+    agg_melt,
     x='type_formation',
     y='valeur',
-    hue='variable',
-    marker='o',
-    ax=ax
+    color='variable',
+    markers=True,
+    color_discrete_sequence=PASTEL_COLORS
 )
 
-for _, row in agg_melt.iterrows():
-    ax.text(
-        row.name % len(agg),
-        row['valeur'],
-        f"{int(row['valeur'])}",
-        ha='center',
-        va='bottom',
-        fontsize=8
-    )
+fig.update_layout(
+    xaxis_tickangle=-45
+)
 
-plt.xticks(rotation=45, ha='right')
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="capacite_vs_candidats"
+)
 
-ax.set_title("Capacité vs Candidats par type de formation")
-ax.set_xlabel("Type de formation")
-ax.set_ylabel("Nombre")
+# =========================
+# SCATTER
+# =========================
 
-st.pyplot(fig)
+st.subheader("Corrélation capacité vs candidats")
 
-st.subheader("Corrélation capacité vs nombre de candidats")
-
-st.code("""
-plt.figure(figsize=(10,6))
-
-sns.scatterplot(
-    data=df_plot,
+fig = px.scatter(
+    df_plot,
     x='capacite_formation',
     y='effectif_total_candidats',
-    hue='type_formation',
-    style='type_formation',
-    palette='tab10',
-    markers=['o','s','D','^','v','P','X'],
-    alpha=0.8,
-    s=80
+    color='type_formation',
+    symbol='type_formation',
+    hover_data=[
+        'nom_complet_formation',
+        'academie',
+        'region'
+    ],
+    color_discrete_sequence=PASTEL_COLORS
 )
 
-plt.xlim(0, 1000)
-
-plt.title("Capacité vs nombre de candidats")
-plt.xlabel("Capacité")
-plt.ylabel("Candidats")
-
-plt.tight_layout()
-plt.show()
-""", language="python")
-
-fig, ax = plt.subplots(figsize=(10,6))
-
-sns.scatterplot(
-    data=df_plot,
-    x='capacite_formation',
-    y='effectif_total_candidats',
-    hue='type_formation',
-    style='type_formation',
-    palette='tab10',
-    markers=['o','s','D','^','v','P','X'],
-    alpha=0.8,
-    s=80,
-    ax=ax
+fig.update_layout(
+    xaxis_range=[0,1000]
 )
 
-plt.xlim(0, 1000)
-
-ax.set_title("Capacité vs nombre de candidats")
-ax.set_xlabel("Capacité")
-ax.set_ylabel("Candidats")
-
-st.pyplot(fig)
-
-st.subheader("📌 Demande vs sélectivité des formations")
-
-st.code("""
-compare = (
-    df_plot
-    .groupby('nom_formation')
-    .agg({
-        'effectif_total_candidats':'sum',
-        'taux_d’accès':'mean'
-    })
-    .dropna()
-    .sort_values('effectif_total_candidats', ascending=False)
-    .head(10)
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="scatter_capacite"
 )
 
-plt.figure(figsize=(10,6))
+# =========================
+# DEMANDE VS SELECTIVITE
+# =========================
 
-sns.scatterplot(
-    data=compare,
-    x='effectif_total_candidats',
-    y='taux_d’accès',
-    s=100
-)
-
-for i, txt in enumerate(compare.index):
-    plt.text(
-        compare['effectif_total_candidats'][i],
-        compare['taux_d’accès'][i],
-        txt,
-        fontsize=8
-    )
-
-plt.title("Demande vs sélectivité (Top 10 formations)")
-plt.xlabel("Nombre de candidats")
-plt.ylabel("Taux d'accès (%)")
-
-plt.tight_layout()
-plt.show()
-""", language="python")
+st.subheader("Demande vs sélectivité")
 
 compare = (
     df_plot
@@ -685,49 +337,64 @@ fig = px.scatter(
     text=compare.index,
     size='effectif_total_candidats',
     color='taux_d’accès',
-    color_continuous_scale='Viridis',
-    hover_name=compare.index,
-    title="Demande vs sélectivité (Top 10 formations)"
+    color_continuous_scale=PASTEL_SCALE
 )
 
 fig.update_traces(
-    textposition='top center',
-    hovertemplate=
-    "<b>%{hovertext}</b><br>" +
-    "Candidats : %{x:,}<br>" +
-    "Taux d'accès : %{y:.1f}%<extra></extra>"
+    textposition='top center'
 )
 
-st.plotly_chart(fig, use_container_width=True)
-
-st.subheader("🚨 Outliers : formations avec moins de candidats que de capacité")
-
-st.code("""
-df_out = df.copy()
-
-df_out['capacite_formation'] = pd.to_numeric(
-    df_out['capacite_formation'],
-    errors='coerce'
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="demande_selectivite"
 )
 
-df_out['effectif_total_candidats'] = pd.to_numeric(
-    df_out['effectif_total_candidats'],
-    errors='coerce'
+# =========================
+# FILIERES
+# =========================
+
+st.subheader("Filières avec le plus de candidats")
+
+df_plot['nom_formation_bis'] = (
+    df_plot['nom_formation_bis']
+    .astype(str)
+    .str.strip()
 )
 
-outliers = df_out[
-    (df_out['effectif_total_candidats'] < df_out['capacite_formation'])
-]
+top_candidats = (
+    df_plot
+    .groupby('nom_formation_bis')['effectif_total_candidats']
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
 
-outliers[[
-    'nom_formation_detaille',
-    'region',
-    'etablissement',
-    'type_formation',
-    'capacite_formation',
-    'effectif_total_candidats'
-]]
-""", language="python")
+fig = px.bar(
+    x=top_candidats.values,
+    y=top_candidats.index,
+    orientation='h',
+    color=top_candidats.values,
+    text=top_candidats.values,
+    color_continuous_scale=PASTEL_SCALE
+)
+
+fig.update_traces(
+    texttemplate='%{text:,}',
+    textposition='outside'
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="filieres"
+)
+
+# =========================
+# OUTLIERS
+# =========================
+
+st.subheader("Formations avec moins de candidats que de capacité")
 
 df_out = df.copy()
 
@@ -747,12 +414,12 @@ outliers = df_out[
 
 st.dataframe(
     outliers[[
-        'nom_formation_detaille',
+        'filière_de_formation',
         'region',
         'etablissement',
-        'type_formation',
         'capacite_formation',
         'effectif_total_candidats'
+        
     ]],
     use_container_width=True
 )
@@ -767,43 +434,20 @@ fig = px.scatter(
         'region',
         'etablissement'
     ],
-    title="Outliers : moins de candidats que de capacité"
+    color_discrete_sequence=PASTEL_COLORS
 )
 
-fig.update_layout(
-    xaxis_title="Capacité",
-    yaxis_title="Nombre de candidats"
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="outliers"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+# =========================
+# REGIONS
+# =========================
 
-st.subheader("🌍 Répartition par région et inégalités géographiques")
-
-st.code("""
-top_regions = df_plot['region'].value_counts().head(10)
-
-plt.figure(figsize=(10,6))
-
-sns.set_theme(style="whitegrid")
-palette = sns.color_palette("viridis", len(top_regions))
-
-ax = sns.barplot(x=top_regions.values, y=top_regions.index)
-
-for bar in ax.patches:
-    ax.annotate(
-        f"{int(bar.get_width())}",
-        (bar.get_width(), bar.get_y() + bar.get_height()/2),
-        va='center',
-        ha='left',
-        xytext=(5,0),
-        textcoords='offset points'
-    )
-
-plt.title("Top 10 des régions avec le plus de formations")
-plt.xlabel("Nombre de formations")
-plt.tight_layout()
-plt.show()
-""", language="python")
+st.subheader("Régions avec le plus de formations")
 
 top_regions = df_plot['region'].value_counts().head(10)
 
@@ -812,86 +456,59 @@ fig = px.bar(
     y=top_regions.index,
     orientation='h',
     color=top_regions.values,
-    color_continuous_scale='Viridis',
     text=top_regions.values,
-    labels={'x':'Nombre de formations','y':''},
-    title='Top 10 des régions avec le plus de formations'
+    color_continuous_scale=PASTEL_SCALE
 )
 
 fig.update_traces(
     texttemplate='%{text:,}',
-    textposition='outside',
-    hovertemplate='<b>%{y}</b><br>Formations : %{x:,}<extra></extra>'
+    textposition='outside'
 )
 
 fig.update_layout(
-    yaxis={'categoryorder':'total ascending'},
-    plot_bgcolor='white'
+    yaxis={'categoryorder':'total ascending'}
 )
 
-st.plotly_chart(fig, use_container_width=True)
-
-st.markdown("""
-L'Île-de-France est la région avec le plus grand nombre de formations puisqu'elle possède presque 1000 formations de plus que la deuxième région.
-""")
-
-st.subheader("🗺️ Répartition des formations par région et type")
-
-st.code("""
-sns.set_theme(style="white")
-
-pivot = pd.crosstab(df_plot['region'], df_plot['type_formation'])
-
-f, ax = plt.subplots(figsize=(12, 8))
-
-sns.heatmap(
-    pivot,
-    annot=True,
-    fmt="d",
-    linewidths=0.5,
-    cmap='coolwarm',
-    linecolor='white',
-    cbar_kws={"shrink": 0.8},
-    ax=ax
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="regions"
 )
 
-plt.title("Répartition des formations par région et type", fontsize=14, weight='bold')
-plt.xlabel("Type de formation")
-plt.ylabel("Région")
+# =========================
+# HEATMAP
+# =========================
 
-plt.tight_layout()
-plt.show()
-""", language="python")
+st.subheader("Répartition des formations par région et type")
 
-pivot = pd.crosstab(df_plot['region'], df_plot['type_formation'])
+pivot = pd.crosstab(
+    df_plot['region'],
+    df_plot['type_formation']
+)
 
 fig = px.imshow(
     pivot,
     text_auto=True,
     aspect="auto",
-    color_continuous_scale='RdBu',
-    labels=dict(
-        x="Type de formation",
-        y="Région",
-        color="Nombre"
-    ),
-    title="Répartition des formations par région et type"
+    color_continuous_scale=PASTEL_SCALE
 )
-
 fig.update_layout(
-    plot_bgcolor='white'
+    title="Heatmap nombre de formations par région",
+    xaxis_tickangle=-45
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="heatmap"
+)
 
 st.markdown("""
 L'Île-de-France est presque systématiquement la région qui possède le plus de formations  
 (sauf pour les PASS).
 """)
 
-st.subheader("🎓 Comparaison des admis selon l'origine académique")
-
-
+st.subheader("Comparaison des admis selon l'origine académique")
 
 cols = [
     'dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)',
@@ -916,15 +533,13 @@ fig = px.bar(
     x=labels,
     y=totaux.values,
     color=labels,
-    text=totaux.values
+    text=totaux.values,
+    color_discrete_sequence=PASTEL_COLORS
 )
 
 fig.update_traces(
     texttemplate='%{text:,}',
-    textposition='outside',
-    hovertemplate=
-    "<b>%{x}</b><br>" +
-    "Admis : %{y:,}<extra></extra>"
+    textposition='outside'
 )
 
 fig.update_layout(
@@ -937,6 +552,10 @@ st.plotly_chart(
     use_container_width=True,
     key="origine_academique"
 )
+
+# =========================
+# PCV VS AUTRES
+# =========================
 
 st.subheader("Admis PCV vs autres académies")
 
@@ -997,19 +616,12 @@ fig = px.line(
     x='type_formation',
     y='nb_admis',
     color='origine',
-    markers=True
-)
-
-fig.update_traces(
-    hovertemplate=
-    "<b>%{x}</b><br>" +
-    "%{fullData.name} : %{y:,}<extra></extra>"
+    markers=True,
+    color_discrete_sequence=PASTEL_COLORS
 )
 
 fig.update_layout(
     title="Admis PCV vs autres (formations Paris / Créteil / Versailles)",
-    xaxis_title="Type de formation",
-    yaxis_title="Nombre d'admis",
     xaxis_tickangle=-45
 )
 
@@ -1025,7 +637,11 @@ On remarque que pour les formations dans les académies de Créteil, Paris et Ve
 On remarque également que le nombre d'admis dans les licences est quasiment identique pour tous les néobacheliers admis.
 """)
 
-st.subheader("📈 Admis PCV vs autres (toutes formations)")
+# =========================
+# PCV GLOBAL
+# =========================
+
+st.subheader("Admis PCV vs autres (toutes formations)")
 
 df_plot = df.copy()
 
@@ -1073,19 +689,12 @@ fig = px.line(
     x='type_formation',
     y='nb_admis',
     color='origine',
-    markers=True
-)
-
-fig.update_traces(
-    hovertemplate=
-    "<b>%{x}</b><br>" +
-    "%{fullData.name} : %{y:,}<extra></extra>"
+    markers=True,
+    color_discrete_sequence=PASTEL_COLORS
 )
 
 fig.update_layout(
     title="Admis PCV vs autres (toutes formations)",
-    xaxis_title="Type de formation",
-    yaxis_title="Nombre d'admis",
     xaxis_tickangle=-45
 )
 
@@ -1093,4 +702,497 @@ st.plotly_chart(
     fig,
     use_container_width=True,
     key="pcv_vs_autres_all"
+)
+
+st.markdown("""
+Quand on regarde pour toutes les formations indépendamment de la région on voit que les élèves issus des académies d'Île-de-France sont quand même avantagés par rapport aux autres dans la majorité des formations.
+
+Les formations avec le plus d'égalité dans les admissions sont les écoles d'ingénieur, écoles de commerce, IFSI, EFTS et Licences.
+""")
+
+# =========================
+# SELECTIVITE
+# =========================
+
+st.subheader("Répartition de la sélectivité selon le type de formation")
+
+df_plot = df.copy()
+
+df_plot['type_formation'] = (
+    df_plot['type_formation']
+    .astype(str)
+    .str.strip()
+)
+
+df_plot['selectivite'] = (
+    df_plot['selectivite']
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
+
+table = (
+    pd.crosstab(
+        df_plot['type_formation'],
+        df_plot['selectivite'],
+        normalize='index'
+    ) * 100
+)
+
+table = table.sort_index().reset_index()
+
+table_melt = table.melt(
+    id_vars='type_formation',
+    var_name='selectivite',
+    value_name='pourcentage'
+)
+
+fig = px.bar(
+    table_melt,
+    x='type_formation',
+    y='pourcentage',
+    color='selectivite',
+    text='pourcentage',
+    barmode='stack',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:.1f}%',
+    textposition='inside'
+)
+
+fig.update_layout(
+    title="Répartition de la sélectivité selon le type de formation",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="selectivite_types"
+)
+
+# =========================
+# TYPES DE BAC
+# =========================
+
+st.subheader("Répartition des admis par type de bac")
+
+df_plot = df.copy()
+
+cols = [
+    'effectif_des_admis_neo_bacheliers_generaux',
+    'effectif_des_admis_neo_bacheliers_technologiques',
+    'effectif_des_admis_neo_bacheliers_professionnels',
+    'effectif_des_admis_neo_bacheliers'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot = df_plot.dropna(subset=cols)
+
+df_plot['generaux'] = (
+    df_plot['effectif_des_admis_neo_bacheliers_generaux'] /
+    df_plot['effectif_des_admis_neo_bacheliers']
+) * 100
+
+df_plot['technologique'] = (
+    df_plot['effectif_des_admis_neo_bacheliers_technologiques'] /
+    df_plot['effectif_des_admis_neo_bacheliers']
+) * 100
+
+df_plot['professionnel'] = (
+    df_plot['effectif_des_admis_neo_bacheliers_professionnels'] /
+    df_plot['effectif_des_admis_neo_bacheliers']
+) * 100
+
+agg = (
+    df_plot
+    .groupby('type_formation')[[
+        'generaux',
+        'technologique',
+        'professionnel'
+    ]]
+    .mean()
+    .reset_index()
+)
+
+agg_melt = agg.melt(
+    id_vars='type_formation',
+    var_name='type_bac',
+    value_name='pourcentage'
+)
+
+fig = px.bar(
+    agg_melt,
+    x='type_formation',
+    y='pourcentage',
+    color='type_bac',
+    text='pourcentage',
+    barmode='stack',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:.1f}%',
+    textposition='inside'
+)
+
+fig.update_layout(
+    title="Répartition des admis par type de bac selon la formation",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="bac_repartition"
+)
+
+# =========================
+# GENRE
+# =========================
+
+st.header("Analyse des candidatures par genre")
+
+df_plot = df.copy()
+
+cols = [
+    'effectif_total_candidats',
+    'nombre_candidates'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot['candidates'] = (
+    df_plot['nombre_candidates']
+    .fillna(0)
+)
+
+df_plot['candidats_hommes'] = (
+    df_plot['effectif_total_candidats'] -
+    df_plot['candidates']
+)
+
+agg = pd.DataFrame({
+    'genre': ['Femmes', 'Hommes'],
+    'nb_candidats': [
+        df_plot['candidates'].sum(),
+        df_plot['candidats_hommes'].sum()
+    ]
+})
+
+fig = px.bar(
+    agg,
+    x='genre',
+    y='nb_candidats',
+    color='genre',
+    text='nb_candidats',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:,}',
+    textposition='outside'
+)
+
+fig.update_layout(
+    title="Nombre de candidats : Hommes VS Femmes",
+    showlegend=False
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="genre_candidats"
+)
+
+st.markdown("""
+On remarque une grosse différence du nombre de candidats entre les femmes et les hommes.
+
+Pour environ 7 millions de femmes candidates sur Parcoursup, il y a seulement 5 millions d'hommes.
+
+Nous pouvons théoriser que les hommes, s'ils poursuivent leurs études, le font davantage dans des formations spécialisées hors Parcoursup (CAP, BP...).
+""")
+
+# =========================
+# GENRE PAR FORMATION
+# =========================
+
+st.subheader("Répartition Hommes / Femmes par formation")
+
+df_plot = df.copy()
+
+cols = [
+    'effectif_total_candidats',
+    'nombre_candidates',
+    'effectif_des_admis_en_phase_principale',
+    'effectif_des_admis_en_phase_complementaire',
+    'dont_effectif_des_candidates_admises'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot['total_admis'] = (
+    df_plot['effectif_des_admis_en_phase_principale'].fillna(0) +
+    df_plot['effectif_des_admis_en_phase_complementaire'].fillna(0)
+)
+
+df_plot['candidates'] = (
+    df_plot['nombre_candidates']
+    .fillna(0)
+)
+
+df_plot['candidats_hommes'] = (
+    df_plot['effectif_total_candidats'] -
+    df_plot['candidates']
+)
+
+df_plot['admises'] = (
+    df_plot['dont_effectif_des_candidates_admises']
+    .fillna(0)
+)
+
+df_plot['admis_hommes'] = (
+    df_plot['total_admis'] -
+    df_plot['admises']
+)
+
+agg = (
+    df_plot
+    .groupby('type_formation')[[
+        'candidates',
+        'candidats_hommes',
+        'admises',
+        'admis_hommes'
+    ]]
+    .sum()
+    .reset_index()
+)
+
+agg['pct_femmes_candidats'] = (
+    agg['candidates'] /
+    (agg['candidates'] + agg['candidats_hommes'])
+) * 100
+
+agg['pct_hommes_candidats'] = (
+    agg['candidats_hommes'] /
+    (agg['candidates'] + agg['candidats_hommes'])
+) * 100
+
+agg['pct_femmes_admis'] = (
+    agg['admises'] /
+    (agg['admises'] + agg['admis_hommes'])
+) * 100
+
+agg['pct_hommes_admis'] = (
+    agg['admis_hommes'] /
+    (agg['admises'] + agg['admis_hommes'])
+) * 100
+
+agg_melt = agg.melt(
+    id_vars='type_formation',
+    value_vars=[
+        'pct_femmes_candidats',
+        'pct_hommes_candidats',
+        'pct_femmes_admis',
+        'pct_hommes_admis'
+    ],
+    var_name='categorie',
+    value_name='pourcentage'
+)
+
+fig = px.bar(
+    agg_melt,
+    x='type_formation',
+    y='pourcentage',
+    color='categorie',
+    text='pourcentage',
+    barmode='group',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:.0f}%',
+    textposition='outside'
+)
+
+fig.update_layout(
+    title="Répartition Hommes / Femmes par formation",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="genre_formation"
+)
+
+st.markdown("""
+Globalement on observe une surreprésensation des femmes dans les formations par rapport aux hommes.
+Plus particulièrement dans les EFTS, IFSI, Licences, Licences LAS, PASS et les autres formations.Les EFTS et IFSI sont les formations avec le plus haut taux de candidates et admises (entre 80 et 90%).
+
+Au contraire les hommes eux sont plus présents dans les BTS, BUT, CPGE, écoles d'ingénieur et écoles de commerce.
+""")
+
+# =========================
+# BOURSIERS
+# =========================
+
+st.subheader("Part des admis néobacheliers boursiers vs non boursiers")
+
+df_plot = df.copy()
+
+cols = [
+    'dont_effectif_des_admis_boursiers_neo_bacheliers',
+    'effectif_des_admis_neo_bacheliers'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot = df_plot.dropna(subset=cols)
+
+df_plot['non_boursiers'] = (
+    df_plot['effectif_des_admis_neo_bacheliers'] -
+    df_plot['dont_effectif_des_admis_boursiers_neo_bacheliers']
+)
+
+agg = (
+    df_plot
+    .groupby('type_formation')[[
+        'dont_effectif_des_admis_boursiers_neo_bacheliers',
+        'non_boursiers'
+    ]]
+    .sum()
+)
+
+pct = agg.div(
+    agg.sum(axis=1),
+    axis=0
+) * 100
+
+pct = pct.reset_index()
+
+pct_melt = pct.melt(
+    id_vars='type_formation',
+    var_name='categorie',
+    value_name='pourcentage'
+)
+
+fig = px.bar(
+    pct_melt,
+    x='type_formation',
+    y='pourcentage',
+    color='categorie',
+    text='pourcentage',
+    barmode='stack',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:.0f}%',
+    textposition='inside'
+)
+
+fig.update_layout(
+    title="Part des admis néobacheliers boursiers vs non boursiers (%)",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="boursiers_vs_non"
+)
+
+# =========================
+# MENTIONS
+# =========================
+
+st.subheader("Répartition des admis par type de mention")
+
+df_plot = df.copy()
+
+cols = [
+    'dont_effectif_des_admis_neo_bacheliers_sans_mention_au_bac',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_assez_bien_au_bac',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_bien_au_bac',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_très_bien_au_bac',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_très_bien_avec_felicitations_au_bac',
+    'effectif_des_admis_neo_bacheliers'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot = df_plot.dropna(
+    subset=['effectif_des_admis_neo_bacheliers']
+)
+
+agg = (
+    df_plot
+    .groupby('type_formation')[cols[:-1]]
+    .sum()
+)
+
+pct = agg.div(
+    agg.sum(axis=1),
+    axis=0
+) * 100
+
+pct = pct.rename(columns={
+    'dont_effectif_des_admis_neo_bacheliers_sans_mention_au_bac': 'Sans mention',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_assez_bien_au_bac': 'Mention assez bien',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_bien_au_bac': 'Mention bien',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_très_bien_au_bac': 'Mention très bien',
+    'dont_effectif_des_admis_neo_bacheliers_avec_mention_très_bien_avec_felicitations_au_bac': 'Très bien (félicitations)'
+})
+
+pct = pct.reset_index()
+
+pct_melt = pct.melt(
+    id_vars='type_formation',
+    var_name='mention',
+    value_name='pourcentage'
+)
+
+fig = px.bar(
+    pct_melt,
+    x='type_formation',
+    y='pourcentage',
+    color='mention',
+    text='pourcentage',
+    barmode='stack',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:.0f}%',
+    textposition='inside'
+)
+
+fig.update_layout(
+    title="Répartition des admis par type de mention (%)",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="mentions_bac"
 )
