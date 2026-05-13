@@ -96,12 +96,25 @@ df_plot['effectif_total_candidats'] = pd.to_numeric(
 )
 
 st.header("Chiffres clés")
+st.markdown("""
+Avant de commencer notre analyse, il est important de déterminer quelques KPI clés. Puisque les analyses mettront principalement en avant les formations et les candidats c'est ce que nous avons décidé de calculer en premier.
+Attention: il est important de se rappeler qu'un candidats sur une formation a pu candidater à plusieurs formations donc ce KPI ne correspond pas au nombre unique de candidats mais aux candidats sur toutes les formations. 
+""")
 
 total_candidats = df_plot['effectif_total_candidats'].sum()
 
 st.metric(
     "Nombre total de candidats",
     f"{int(total_candidats):,}".replace(",", " ")
+)
+total_candidats_ayant_accepte = pd.to_numeric(
+    df_plot['total_candidats_ayant_accepte'],
+    errors='coerce'
+).sum()
+
+st.metric(
+    "Nombre total d'admis",
+    f"{int(total_candidats_ayant_accepte):,}".replace(",", " ")
 )
 
 total_formations = len(df_plot)
