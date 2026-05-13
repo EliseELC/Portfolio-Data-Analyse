@@ -43,11 +43,13 @@ def load_data():
 
 df = load_data()
 
-st.title("Analyse des données de candidature Parcoursup (session 2025)")
+st.title("Analyse des voeux sur Parcoursup et détail des formations (session 2025)")
 
 st.markdown("""
-Bienvenue dans cette analyse exploratoire des données Parcoursup.  
-Cette application permet d'étudier les formations, les profils des admis et les dynamiques de sélection.
+Bienvenue dans cette analyse exploratoire des données Parcoursup. 
+Le dataframe utilisé provient de data.gouv sous le  nom "Parcoursup 2025 - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements". Il contient le détail de chaque formation proposée et pour chacune le nombre de candidats, admis...
+
+Ce jeu de données est très complet et contient donc des informations correctes. Au préalable de nos analyses nous avons modifié le nom des colonnes et réalisé des analyses exploratoires qui ne seront pas présentes sur cette page pour nous assurer de la cohérence des données.
 """)
 
 df.columns = (
@@ -95,113 +97,145 @@ df_plot['effectif_total_candidats'] = pd.to_numeric(
     errors='coerce'
 )
 
-st.header("Chiffres clés")
+st.markdown(
+    "<h2 style='color:#E63946;'>Chiffres clés</h2>",
+    unsafe_allow_html=True
+)
 st.markdown("""
-Avant de commencer notre analyse, il est important de déterminer quelques KPI clés. Puisque les analyses mettront principalement en avant les formations et les candidats c'est ce que nous avons décidé de calculer en premier.
+Avant de commencer notre analyse, il est important de déterminer quelques KPI clés.
 Attention: il est important de se rappeler qu'un candidats sur une formation a pu candidater à plusieurs formations donc ce KPI ne correspond pas au nombre unique de candidats mais aux candidats sur toutes les formations. 
+
+Pour cette raison on décide de compter le nombre d'admis (ceux qui ont accepté la proposition d'un établissement) afin d'avoir une meilleure idée du nombre de candidats uniques. Evidemment ce KPI ne prendra pas en compte les personnes n'ayant reçu ou accepté aucune proposition alors qu'elles avaient candidatés mais ce chiffre se rapproche de la réalité. 
 """)
 
 total_candidats = df_plot['effectif_total_candidats'].sum()
 
-st.metric(
-    "Nombre total de candidats",
-    f"{int(total_candidats):,}".replace(",", " ")
-)
 total_candidats_ayant_accepte = pd.to_numeric(
-    df_plot['total_candidats_ayant_accepte'],
+    df_plot['effectif_total_des_candidats_ayant_accepte_la_proposition_de_l’etablissement_(admis)'],
     errors='coerce'
 ).sum()
 
-st.metric(
-    "Nombre total d'admis",
-    f"{int(total_candidats_ayant_accepte):,}".replace(",", " ")
-)
-
 total_formations = len(df_plot)
 
-st.metric(
-    "Nombre total de formations",
-    f"{int(total_formations):,}".replace(",", " ")
-)
+col1, col2, col3 = st.columns(3)
 
-st.header("Visualisations")
+with col1:
+    st.metric(
+        "Nombre total de candidats",
+        f"{int(total_candidats):,}".replace(",", " ")
+    )
+
+with col2:
+    st.metric(
+        "Nombre total d'admis",
+        f"{int(total_candidats_ayant_accepte):,}".replace(",", " ")
+    )
+
+with col3:
+    st.metric(
+        "Nombre total de formations",
+        f"{int(total_formations):,}".replace(",", " ")
+    )
+st.markdown("""
+On voit bien un gros écart entre le nombre de candidats et le nombre d'admis. Si on divise le nombre de candidats par le nombre d'admis on peut théoriser qu'un admis a fait en moyenne 20 candidatures si on considère que tous les candidats ont accepté une proposition.""")
+st.markdown(
+    "<h2 style='color:#E63946;'>Visualisations générales</h2>",
+    unsafe_allow_html=True
+)
+st.markdown("""
+Nous commencerons notre étude par des visualisations générales pour ensuite faire des analyses plus poussées.            
+            
+""")
+col1, col2 = st.columns(2)
 
 # =========================
 # TYPES DE FORMATIONS
 # =========================
 
-st.subheader("Types de formations les plus demandés")
+st.subheader("Classement des types de formations par nombre de candidatures")
 
-top_formations = (
-    df_plot.groupby('type_formation')['effectif_total_candidats']
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-)
+col1, col2 = st.columns([0.8, 1.2])
 
-fig = px.bar(
-    x=top_formations.values,
-    y=top_formations.index,
-    orientation='h',
-    color=top_formations.values,
-    text=top_formations.values,
-    color_continuous_scale=PASTEL_SCALE
-)
+# =========================
+# TYPES DE FORMATIONS
+# =========================
+with col1:
 
-fig.update_traces(
-    texttemplate='%{text:,}',
-    textposition='outside'
-)
+    type_counts = df_plot['type_formation'].value_counts()
 
-fig.update_layout(
-    title="Top 10 des types de formation",
-    yaxis={'categoryorder':'total ascending'}
-)
+    fig = px.pie(
+        values=type_counts.values,
+        names=type_counts.index,
+        hole=0.4,
+        color_discrete_sequence=PASTEL_COLORS
+    )
 
-st.plotly_chart(
-    fig,
-    use_container_width=True,
-    key="top_types_formations"
-)
+    fig.update_traces(
+        textinfo='percent+label'
+    )
+
+    fig.update_layout(
+        height=500
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True,
+        key="pie_types"
+    )
+    
+    
 
 # =========================
 # TOP FORMATIONS
 # =========================
 
-st.subheader("Top 10 des formations les plus demandées")
+with col2:
 
-top_formations = (
-    df_plot
-    .groupby('nom_complet_formation')['effectif_total_candidats']
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-)
+    top_formations = (
+        df_plot.groupby('type_formation')['effectif_total_candidats']
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+    )
 
-fig = px.bar(
-    x=top_formations.values,
-    y=top_formations.index,
-    orientation='h',
-    color=top_formations.values,
-    text=top_formations.values,
-    color_continuous_scale=PASTEL_SCALE
-)
+    fig1 = px.bar(
+        x=top_formations.values,
+        y=top_formations.index,
+        orientation='h',
+        color=top_formations.values,
+        text=top_formations.values,
+        color_continuous_scale=PASTEL_SCALE
+    )
 
-fig.update_traces(
-    texttemplate='%{text:,}',
-    textposition='outside'
-)
+    fig1.update_traces(
+        texttemplate='%{text:,}',
+        textposition='outside',
+        width=0.5,
+        cliponaxis=False
+    )
 
-fig.update_layout(
-    title="Top 10 des formations les plus demandées",
-    yaxis={'categoryorder':'total ascending'}
-)
+    fig1.update_layout(
+        yaxis={'categoryorder':'total ascending'},
+        xaxis_title=None,
+        yaxis_title=None,
+        height=500,
+        margin=dict(l=20, r=120, t=60, b=20),
+        coloraxis_showscale=False
+    )
 
-st.plotly_chart(
-    fig,
-    use_container_width=True,
-    key="top_formations"
-)
+    st.plotly_chart(
+        fig1,
+        use_container_width=True,
+        key="top_types_formations"
+    )
+    
+
+st.markdown("""
+Les <span style='color:#E63946'><b>Licences</b></span> représentent la part la plus importante des formations disponibles sur Parcoursup.
+On retrouve ensuite les <span style='color:#457B9D'><b>BTS</b></span> avec 2 millions de candidatures, les <span style='color:#2A9D8F'><b>IFSI</b></span> et les <span style='color:#F4A261'><b>BUT</b></span>. Les formations les plus sélectives ou spécialisées représentent une part beaucoup plus faible de l'offre globale.
+Cette répartition montre la forte dominance des parcours universitaires classiques dans l'enseignement supérieur français.
+""", unsafe_allow_html=True)
 
 # =========================
 # PIE CHART
@@ -209,25 +243,70 @@ st.plotly_chart(
 
 st.subheader("Répartition des types de formation")
 
-type_counts = df_plot['type_formation'].value_counts()
+col1, col2 = st.columns([1.4, 0.6])
 
-fig = px.pie(
-    values=type_counts.values,
-    names=type_counts.index,
-    hole=0.4,
-    color_discrete_sequence=PASTEL_COLORS
-)
+# =========================
+# bar formations précises
+# =========================
 
-fig.update_traces(
-    textinfo='percent+label'
-)
+with col1:
+    
+    top_formations_detail = (
+        df_plot
+        .groupby('nom_complet_formation')['effectif_total_candidats']
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+    )
 
-st.plotly_chart(
-    fig,
-    use_container_width=True,
-    key="pie_types"
-)
+    fig2 = px.bar(
+        x=top_formations_detail.values,
+        y=top_formations_detail.index,
+        orientation='h',
+        color=top_formations_detail.values,
+        text=top_formations_detail.values,
+        color_continuous_scale=PASTEL_SCALE
+    )
 
+    fig2.update_traces(
+        texttemplate='%{text:,}',
+        textposition='outside',
+        width=0.5,
+        cliponaxis=False
+    )
+
+    fig2.update_layout(
+        title="Top 10 des formations (nom complet)",
+        yaxis={'categoryorder':'total ascending'},
+        xaxis_title=None,
+        yaxis_title=None,
+        height=500,
+        margin=dict(l=20, r=140, t=60, b=20),
+        font=dict(size=11),
+        coloraxis_showscale=False
+    )
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True,
+        key="top_formations"
+    )
+    
+
+# =========================
+# TEXTE
+# =========================
+
+with col2:
+
+    st.markdown("""
+    Lorsqu'on regarde de plus près sur les formations les plus demandées, ce sont les concours pour accéder aux grandes écoles de commerce ou d'ingénieur qui cumulent le plus de candidats. 
+
+Cela s'explique par le fait que ces 3 concours regroupent plusieurs établissement dans lesquels seront repartis les admis.
+Les licences sont les formations les plus demandées de par leur nombre puisqu'une université peut proposer plusieurs centaines de licences et qu'on compte environ 2400 licences en France. 
+
+On remarque également plusieurs D.E pour devenir infirmier, ces diplômes d'état sont donc également très présents dans les voeux des candidats.
+""")
 # =========================
 # BOXPLOT
 # =========================
@@ -457,6 +536,199 @@ st.plotly_chart(
 )
 
 # =========================
+# GENRE
+# =========================
+
+st.markdown(
+    "<h2 style='color:#E63946;'>Analyse par genre</h2>",
+    unsafe_allow_html=True
+)
+df_plot = df.copy()
+
+cols = [
+    'effectif_total_candidats',
+    'nombre_candidates'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot['candidates'] = (
+    df_plot['nombre_candidates']
+    .fillna(0)
+)
+
+df_plot['candidats_hommes'] = (
+    df_plot['effectif_total_candidats'] -
+    df_plot['candidates']
+)
+
+agg = pd.DataFrame({
+    'genre': ['Femmes', 'Hommes'],
+    'nb_candidats': [
+        df_plot['candidates'].sum(),
+        df_plot['candidats_hommes'].sum()
+    ]
+})
+
+fig = px.bar(
+    agg,
+    x='genre',
+    y='nb_candidats',
+    color='genre',
+    text='nb_candidats',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:,}',
+    textposition='outside'
+)
+
+fig.update_layout(
+    title="Nombre de candidats : Hommes VS Femmes",
+    showlegend=False
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="genre_candidats"
+)
+
+st.markdown("""
+On remarque une grosse différence du nombre de candidats entre les femmes et les hommes.
+
+Pour environ 7 millions de femmes candidates sur Parcoursup, il y a seulement 5 millions d'hommes.
+
+Nous pouvons théoriser que les hommes, s'ils poursuivent leurs études, le font davantage dans des formations spécialisées hors Parcoursup (CAP, BP...).
+""")
+
+# =========================
+# GENRE PAR FORMATION
+# =========================
+
+
+df_plot = df.copy()
+
+cols = [
+    'effectif_total_candidats',
+    'nombre_candidates',
+    'effectif_des_admis_en_phase_principale',
+    'effectif_des_admis_en_phase_complementaire',
+    'dont_effectif_des_candidates_admises'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot['total_admis'] = (
+    df_plot['effectif_des_admis_en_phase_principale'].fillna(0) +
+    df_plot['effectif_des_admis_en_phase_complementaire'].fillna(0)
+)
+
+df_plot['candidates'] = (
+    df_plot['nombre_candidates']
+    .fillna(0)
+)
+
+df_plot['candidats_hommes'] = (
+    df_plot['effectif_total_candidats'] -
+    df_plot['candidates']
+)
+
+df_plot['admises'] = (
+    df_plot['dont_effectif_des_candidates_admises']
+    .fillna(0)
+)
+
+df_plot['admis_hommes'] = (
+    df_plot['total_admis'] -
+    df_plot['admises']
+)
+
+agg = (
+    df_plot
+    .groupby('type_formation')[[
+        'candidates',
+        'candidats_hommes',
+        'admises',
+        'admis_hommes'
+    ]]
+    .sum()
+    .reset_index()
+)
+
+agg['pct_femmes_candidats'] = (
+    agg['candidates'] /
+    (agg['candidates'] + agg['candidats_hommes'])
+) * 100
+
+agg['pct_hommes_candidats'] = (
+    agg['candidats_hommes'] /
+    (agg['candidates'] + agg['candidats_hommes'])
+) * 100
+
+agg['pct_femmes_admis'] = (
+    agg['admises'] /
+    (agg['admises'] + agg['admis_hommes'])
+) * 100
+
+agg['pct_hommes_admis'] = (
+    agg['admis_hommes'] /
+    (agg['admises'] + agg['admis_hommes'])
+) * 100
+
+agg_melt = agg.melt(
+    id_vars='type_formation',
+    value_vars=[
+        'pct_femmes_candidats',
+        'pct_hommes_candidats',
+        'pct_femmes_admis',
+        'pct_hommes_admis'
+    ],
+    var_name='categorie',
+    value_name='pourcentage'
+)
+
+fig = px.bar(
+    agg_melt,
+    x='type_formation',
+    y='pourcentage',
+    color='categorie',
+    text='pourcentage',
+    barmode='group',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:.0f}%',
+    textposition='outside'
+)
+
+fig.update_layout(
+    title="Répartition Hommes / Femmes par formation",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="genre_formation"
+)
+
+st.markdown("""
+Globalement on observe une surreprésensation des femmes dans les formations par rapport aux hommes.
+Plus particulièrement dans les EFTS, IFSI, Licences, Licences LAS, PASS et les autres formations.Les EFTS et IFSI sont les formations avec le plus haut taux de candidates et admises (entre 80 et 90%).
+
+Au contraire les hommes eux sont plus présents dans les BTS, BUT, CPGE, écoles d'ingénieur et écoles de commerce.
+""")
+
+# =========================
 # REGIONS
 # =========================
 
@@ -492,8 +764,10 @@ st.plotly_chart(
 # HEATMAP
 # =========================
 
-st.subheader("Répartition des formations par région et type")
-
+st.markdown(
+    "<h2 style='color:#E63946;'>Analyses géographiques</h2>",
+    unsafe_allow_html=True
+)
 pivot = pd.crosstab(
     df_plot['region'],
     df_plot['type_formation']
@@ -727,8 +1001,10 @@ Les formations avec le plus d'égalité dans les admissions sont les écoles d'i
 # SELECTIVITE
 # =========================
 
-st.subheader("Répartition de la sélectivité selon le type de formation")
-
+st.markdown(
+    "<h2 style='color:#E63946;'>Analyse de la selectivité et des admis des formations</h2>",
+    unsafe_allow_html=True
+)
 df_plot = df.copy()
 
 df_plot['type_formation'] = (
@@ -867,271 +1143,6 @@ st.plotly_chart(
 )
 
 # =========================
-# GENRE
-# =========================
-
-st.header("Analyse des candidatures par genre")
-
-df_plot = df.copy()
-
-cols = [
-    'effectif_total_candidats',
-    'nombre_candidates'
-]
-
-df_plot[cols] = df_plot[cols].apply(
-    pd.to_numeric,
-    errors='coerce'
-)
-
-df_plot['candidates'] = (
-    df_plot['nombre_candidates']
-    .fillna(0)
-)
-
-df_plot['candidats_hommes'] = (
-    df_plot['effectif_total_candidats'] -
-    df_plot['candidates']
-)
-
-agg = pd.DataFrame({
-    'genre': ['Femmes', 'Hommes'],
-    'nb_candidats': [
-        df_plot['candidates'].sum(),
-        df_plot['candidats_hommes'].sum()
-    ]
-})
-
-fig = px.bar(
-    agg,
-    x='genre',
-    y='nb_candidats',
-    color='genre',
-    text='nb_candidats',
-    color_discrete_sequence=PASTEL_COLORS
-)
-
-fig.update_traces(
-    texttemplate='%{text:,}',
-    textposition='outside'
-)
-
-fig.update_layout(
-    title="Nombre de candidats : Hommes VS Femmes",
-    showlegend=False
-)
-
-st.plotly_chart(
-    fig,
-    use_container_width=True,
-    key="genre_candidats"
-)
-
-st.markdown("""
-On remarque une grosse différence du nombre de candidats entre les femmes et les hommes.
-
-Pour environ 7 millions de femmes candidates sur Parcoursup, il y a seulement 5 millions d'hommes.
-
-Nous pouvons théoriser que les hommes, s'ils poursuivent leurs études, le font davantage dans des formations spécialisées hors Parcoursup (CAP, BP...).
-""")
-
-# =========================
-# GENRE PAR FORMATION
-# =========================
-
-st.subheader("Répartition Hommes / Femmes par formation")
-
-df_plot = df.copy()
-
-cols = [
-    'effectif_total_candidats',
-    'nombre_candidates',
-    'effectif_des_admis_en_phase_principale',
-    'effectif_des_admis_en_phase_complementaire',
-    'dont_effectif_des_candidates_admises'
-]
-
-df_plot[cols] = df_plot[cols].apply(
-    pd.to_numeric,
-    errors='coerce'
-)
-
-df_plot['total_admis'] = (
-    df_plot['effectif_des_admis_en_phase_principale'].fillna(0) +
-    df_plot['effectif_des_admis_en_phase_complementaire'].fillna(0)
-)
-
-df_plot['candidates'] = (
-    df_plot['nombre_candidates']
-    .fillna(0)
-)
-
-df_plot['candidats_hommes'] = (
-    df_plot['effectif_total_candidats'] -
-    df_plot['candidates']
-)
-
-df_plot['admises'] = (
-    df_plot['dont_effectif_des_candidates_admises']
-    .fillna(0)
-)
-
-df_plot['admis_hommes'] = (
-    df_plot['total_admis'] -
-    df_plot['admises']
-)
-
-agg = (
-    df_plot
-    .groupby('type_formation')[[
-        'candidates',
-        'candidats_hommes',
-        'admises',
-        'admis_hommes'
-    ]]
-    .sum()
-    .reset_index()
-)
-
-agg['pct_femmes_candidats'] = (
-    agg['candidates'] /
-    (agg['candidates'] + agg['candidats_hommes'])
-) * 100
-
-agg['pct_hommes_candidats'] = (
-    agg['candidats_hommes'] /
-    (agg['candidates'] + agg['candidats_hommes'])
-) * 100
-
-agg['pct_femmes_admis'] = (
-    agg['admises'] /
-    (agg['admises'] + agg['admis_hommes'])
-) * 100
-
-agg['pct_hommes_admis'] = (
-    agg['admis_hommes'] /
-    (agg['admises'] + agg['admis_hommes'])
-) * 100
-
-agg_melt = agg.melt(
-    id_vars='type_formation',
-    value_vars=[
-        'pct_femmes_candidats',
-        'pct_hommes_candidats',
-        'pct_femmes_admis',
-        'pct_hommes_admis'
-    ],
-    var_name='categorie',
-    value_name='pourcentage'
-)
-
-fig = px.bar(
-    agg_melt,
-    x='type_formation',
-    y='pourcentage',
-    color='categorie',
-    text='pourcentage',
-    barmode='group',
-    color_discrete_sequence=PASTEL_COLORS
-)
-
-fig.update_traces(
-    texttemplate='%{text:.0f}%',
-    textposition='outside'
-)
-
-fig.update_layout(
-    title="Répartition Hommes / Femmes par formation",
-    xaxis_tickangle=-45
-)
-
-st.plotly_chart(
-    fig,
-    use_container_width=True,
-    key="genre_formation"
-)
-
-st.markdown("""
-Globalement on observe une surreprésensation des femmes dans les formations par rapport aux hommes.
-Plus particulièrement dans les EFTS, IFSI, Licences, Licences LAS, PASS et les autres formations.Les EFTS et IFSI sont les formations avec le plus haut taux de candidates et admises (entre 80 et 90%).
-
-Au contraire les hommes eux sont plus présents dans les BTS, BUT, CPGE, écoles d'ingénieur et écoles de commerce.
-""")
-
-# =========================
-# BOURSIERS
-# =========================
-
-st.subheader("Part des admis néobacheliers boursiers vs non boursiers")
-
-df_plot = df.copy()
-
-cols = [
-    'dont_effectif_des_admis_boursiers_neo_bacheliers',
-    'effectif_des_admis_neo_bacheliers'
-]
-
-df_plot[cols] = df_plot[cols].apply(
-    pd.to_numeric,
-    errors='coerce'
-)
-
-df_plot = df_plot.dropna(subset=cols)
-
-df_plot['non_boursiers'] = (
-    df_plot['effectif_des_admis_neo_bacheliers'] -
-    df_plot['dont_effectif_des_admis_boursiers_neo_bacheliers']
-)
-
-agg = (
-    df_plot
-    .groupby('type_formation')[[
-        'dont_effectif_des_admis_boursiers_neo_bacheliers',
-        'non_boursiers'
-    ]]
-    .sum()
-)
-
-pct = agg.div(
-    agg.sum(axis=1),
-    axis=0
-) * 100
-
-pct = pct.reset_index()
-
-pct_melt = pct.melt(
-    id_vars='type_formation',
-    var_name='categorie',
-    value_name='pourcentage'
-)
-
-fig = px.bar(
-    pct_melt,
-    x='type_formation',
-    y='pourcentage',
-    color='categorie',
-    text='pourcentage',
-    barmode='stack',
-    color_discrete_sequence=PASTEL_COLORS
-)
-
-fig.update_traces(
-    texttemplate='%{text:.0f}%',
-    textposition='inside'
-)
-
-fig.update_layout(
-    title="Part des admis néobacheliers boursiers vs non boursiers (%)",
-    xaxis_tickangle=-45
-)
-
-st.plotly_chart(
-    fig,
-    use_container_width=True,
-    key="boursiers_vs_non"
-)
-
-# =========================
 # MENTIONS
 # =========================
 
@@ -1209,3 +1220,79 @@ st.plotly_chart(
     use_container_width=True,
     key="mentions_bac"
 )
+
+# =========================
+# BOURSIERS
+# =========================
+
+st.markdown(
+    "<h2 style='color:#E63946;'>Présences des admis boursiers dans les formations</h2>",
+    unsafe_allow_html=True
+)
+df_plot = df.copy()
+
+cols = [
+    'dont_effectif_des_admis_boursiers_neo_bacheliers',
+    'effectif_des_admis_neo_bacheliers'
+]
+
+df_plot[cols] = df_plot[cols].apply(
+    pd.to_numeric,
+    errors='coerce'
+)
+
+df_plot = df_plot.dropna(subset=cols)
+
+df_plot['non_boursiers'] = (
+    df_plot['effectif_des_admis_neo_bacheliers'] -
+    df_plot['dont_effectif_des_admis_boursiers_neo_bacheliers']
+)
+
+agg = (
+    df_plot
+    .groupby('type_formation')[[
+        'dont_effectif_des_admis_boursiers_neo_bacheliers',
+        'non_boursiers'
+    ]]
+    .sum()
+)
+
+pct = agg.div(
+    agg.sum(axis=1),
+    axis=0
+) * 100
+
+pct = pct.reset_index()
+
+pct_melt = pct.melt(
+    id_vars='type_formation',
+    var_name='categorie',
+    value_name='pourcentage'
+)
+
+fig = px.bar(
+    pct_melt,
+    x='type_formation',
+    y='pourcentage',
+    color='categorie',
+    text='pourcentage',
+    barmode='stack',
+    color_discrete_sequence=PASTEL_COLORS
+)
+
+fig.update_traces(
+    texttemplate='%{text:.0f}%',
+    textposition='inside'
+)
+
+fig.update_layout(
+    title="Part des admis néobacheliers boursiers vs non boursiers (%)",
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="boursiers_vs_non"
+)
+
