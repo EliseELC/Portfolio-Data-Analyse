@@ -9,7 +9,7 @@ page = st.sidebar.radio(
     [
         "Accueil",
         "Projet Parcoursup",
-        "Projet Festivals"
+        "Index Egalité Professionelle"
     ]
 )
 
@@ -1167,10 +1167,10 @@ elif page == "Projet Parcoursup":
     <div style='text-align: justify; adding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    La région qui regroupe le plus de formations sur ParcourSup est de loin l'Ile-de-France avec...
+    L'analyse géographique est intéressante puisque c'est un point qui est souvent rappelé puisque la région Ile-de-France est la région la plus riche à l'échelle nationale. Les inégalités régionales peuvent se repercuter sur les candidats puisque les régions financent en partie certaines bourses et des infrastructures.
     <br>
 
-    ...                
+    La région qui regroupe le plus de formations sur ParcourSup est de loin l'Ile-de-France avec 2691 formations sur ParcourSup. Si on compare avec la deuxième région : Auvergne-Rhône-Alpes il y près de 900 formations de plus en IDF ce qui est plus que le total des formations en Pays-de-la-Loire, Bretagne et Normandie.           
     </div>
     """, unsafe_allow_html=True)
     
@@ -1179,12 +1179,12 @@ elif page == "Projet Parcoursup":
     #-----HEATMAP-------
 
     PASTEL_HEATMAP = [
-        [0.0, "#A2D2FF"],
-        [0.2,"#BEE1E6"],
-        [0.4, "#E2ECE9"],
-        [0.6, "#FDE2E4"],
-        [0.8, "#FAD2E1"],
-        [1.0, "#CDB4DB"] 
+        [0.0, "#F4F0E3"],
+        [0.2,"#DAD4DE"],
+        [0.4, "#BBB4DA"],
+        [0.8, "#b9dcfe"],
+        [0.8, "#9ecdff"],
+        [1.0, "#596bf3"] 
     ]
 
 
@@ -1973,20 +1973,17 @@ elif page == "Projet Parcoursup":
 
 elif page == "Index Egalité Professionelle":
 
-    st.set_page_config(
-    page_title="Portfolio Data Analyse",
-    layout="wide"
-    )
+    st.title("📊 Index égalité Femmes / Hommes")
 
     @st.cache_data
     def load_data():
-        df = pd.read_excel(
-            "index-egalite-fh.xlsx"
-        )
+        df = pd.read_excel("index-egalite-fh.xlsx")
         return df
 
     df = load_data()
-    
+
+    st.dataframe(df.head())
+        
     PASTEL_SCALE = [
         [0.0, "#FADADD"],
         [0.2, "#F8C8DC"],
