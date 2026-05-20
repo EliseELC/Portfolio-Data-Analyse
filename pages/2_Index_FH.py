@@ -29,6 +29,20 @@ df.columns = (
     .str.replace("'", "")
     .str.replace("é", "e")
 )
+# =========================
+# NETTOYAGE NOTE INDEX
+# =========================
+
+df.columns = df.columns.str.strip()
+
+df_plot = df.copy()
+
+df_plot["note_index"] = pd.to_numeric(
+    df_plot["note_index"],
+    errors="coerce"
+)
+
+df_plot = df_plot.dropna(subset=["note_index"])
 
 st.markdown("""
 <style>
@@ -1264,6 +1278,6 @@ st.dataframe(
         "Région",
         "Tranche d'effectifs",
         "Note Index"
-    ]],
+    ]].dropna(),
     use_container_width=True
 )
