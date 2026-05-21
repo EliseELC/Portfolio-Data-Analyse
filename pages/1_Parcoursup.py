@@ -50,11 +50,10 @@ st.markdown("""
 <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>            
 Bienvenue dans cette analyse exploratoire des données Parcoursup.            
 Le dataframe utilisé provient de data.gouv sous le  nom "Parcoursup 2025 - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements". Il contient le détail de chaque formation proposée et pour chacune le nombre de candidats, admis...
-
-<br>
-            
+<br><br>
 Ce jeu de données est très complet et contient donc des informations correctes. Au préalable de nos analyses nous avons modifié le nom des colonnes et réalisé des analyses exploratoires qui ne seront pas présentes sur cette page pour nous assurer de la cohérence des données.
-<br>
+<br><br>
+            
 </div>
 """, unsafe_allow_html=True)
 
@@ -597,7 +596,15 @@ with tab3:
     col1, col2 = st.columns([0.6, 0.4], gap="medium")
 
     with col1: 
+        st.markdown("""
 
+        <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
+                    
+        <br>
+
+                
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown("""
         <style>
 
@@ -672,6 +679,16 @@ with tab3:
 
     st.markdown("""
 
+    <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>       
+    <br>
+              
+    </div>
+    """, unsafe_allow_html=True)
+
+    with col2:
+
+        st.markdown("""
+
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
                     
     <br>
@@ -679,8 +696,6 @@ with tab3:
                 
     </div>
     """, unsafe_allow_html=True)
-
-    with col2:
 
         st.markdown("""
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
@@ -695,7 +710,7 @@ with tab3:
     <br>
 
     Si on regarde de plus près les quelques formations avec le plus de capacité on trouve plusieurs BTS en distanciel et qui pour certains d'entre eux peuvent accueillir jusqu'à 3400 admis lse formations en distanciel n'étant pas soumises aux mêmes restrictions logistiques que les formations en présentiel.  
-    <br>
+    
 
     </div>
     """, unsafe_allow_html=True)

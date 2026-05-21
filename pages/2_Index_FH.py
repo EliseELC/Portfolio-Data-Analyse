@@ -16,6 +16,7 @@ def load_data():
     df = pd.read_excel(
         r"data\index-egalite-fh.xlsx"
     )
+    
     return df
 
 df = load_data()
