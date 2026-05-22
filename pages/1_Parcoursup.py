@@ -119,10 +119,10 @@ with tab1:
     )
     st.markdown("""
     <div style='text-align: justify; font-size: 16px; line-height:1.8'>
-    Avant de commencer notre analyse, il est important de déterminer quelques KPI clés.
-    Attention: il est important de se rappeler qu'un candidats sur une formation a pu candidater à plusieurs formations donc ce KPI ne correspond pas au nombre unique de candidats mais aux candidats sur toutes les formations. 
+    Avant de commencer notre analyse, il est important de déterminer quelques <b>KPI clés</b>.
+    Attention: il est important de se rappeler qu'un candidats sur une formation a pu <b>candidater à plusieurs formations</b> donc ce KPI ne correspond pas au nombre unique de candidats mais aux candidats sur toutes les formations. 
     <br><br>
-    Pour cette raison on décide de compter le nombre d'admis (ceux qui ont accepté la proposition d'un établissement) afin d'avoir une meilleure idée du nombre de candidats uniques. Evidemment ce KPI ne prendra pas en compte les personnes n'ayant reçu ou accepté aucune proposition alors qu'elles avaient candidatés mais ce chiffre se rapproche de la réalité. 
+    Pour cette raison on décide de compter le nombre d'admis (ceux qui ont accepté la proposition d'un établissement) afin d'avoir une meilleure idée du nombre de candidats uniques. Evidemment ce KPI ne <b>prendra pas en compte</b> les personnes n'ayant reçu ou accepté aucune proposition alors qu'elles avaient candidatés mais ce chiffre se rapproche de la réalité. 
     <br><br>
     </div>
     """, unsafe_allow_html=True)
@@ -157,8 +157,8 @@ with tab1:
         )
     st.markdown("""
     <div style='text-align: justify; padding-top:25px; font-size: 16px; line-height:1.8'>
-    On voit bien un gros écart entre le nombre de candidats et le nombre d'admis. 
-    Si on divise le nombre de candidats par le nombre d'admis on peut théoriser qu'un admis a fait en moyenne 20 candidatures si on considère que tous les candidats ont accepté une proposition.""", unsafe_allow_html=True)
+    On voit bien un <b>gros écart</b> entre le nombre de candidats et le nombre d'admis. 
+    Si on divise le nombre de candidats par le nombre d'admis on peut théoriser qu'un admis a fait en moyenne <b>20 candidatures</b> si on considère que tous les candidats ont accepté une proposition.""", unsafe_allow_html=True)
 
     st.markdown("""
 
@@ -278,13 +278,13 @@ with tab2:
 
     st.markdown("""
     <div style='text-align: justify; padding-top:25px; font-size: 16px; line-height:1.8'>
-    Les <span style='color:#E63946'><b>BTS</b></span> représentent la part la plus importante des formations disponibles sur Parcoursup (37,5%). Pourtant on voit bien que les <span style='color:#457B9D'><b>licences</b></span> sont les formations où on candidate le plus et de loin mais il y a moins de licences que de BTS (21,4% des formations). Cet écart entre les deux graphiques s'explique par le fait que les licences ont une plus grande capacité d'accueil que les BTS donc il est normal qu'elles cumulent plus de candidats.
+    Les <b>BTS</b> représentent la part la plus importante des formations disponibles sur Parcoursup (37,5%). Pourtant on voit bien que les <b>licences</b> sont les formations où on candidate le plus et de loin mais il y a <b>moins de licences que de BTS</b> (21,4% des formations). Cet écart entre les deux graphiques s'explique par le fait que les licences ont une <b>plus grande capacité d'accueil</b> que les BTS donc il est normal qu'elles cumulent plus de candidats.
 
     <br>
     <br>
                 
-    Si on regarde au niveau des candidatures retrouve ensuite les <span style='color:#2A9D8F'><b>IFSI</b></span> et les <span style='color:#F4A261'><b>BUT</b></span>. Les formations les plus sélectives ou spécialisées représentent une part beaucoup plus faible de l'offre globale.
-    Cette répartition montre la forte dominance des parcours universitaires classiques dans l'enseignement supérieur français.
+    Si on regarde au niveau des candidatures retrouve ensuite les <b>IFSI</b> et les <b>BUT</b>. Les formations les plus sélectives ou spécialisées représentent une part beaucoup plus faible de l'offre globale.
+    Cette répartition montre la <b>forte dominance des parcours universitaires classiques</b> dans l'enseignement supérieur français.
     <br><br>
                 
     </div>
@@ -300,11 +300,11 @@ with tab2:
         st.markdown("""
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
                     
-    Si au lieu d'analyser le type de diplôme nous prenons les 10 fillières les plus demandées c'est-à-dire la spécilisation de la formation, nous pourrions penser que si les filières suivent la tendance des diplômes, les filières de licence devraient être les plus demandées (comme par exemple le droit, l'économie, psychologie...)
+    Si au lieu d'analyser le type de diplôme nous prenons les 10 fillières les plus demandées c'est-à-dire la <b>spécilisation de la formation</b>, nous pourrions penser que si les filières suivent la tendance des diplômes, les filières de licence devraient être les plus demandées (comme par exemple le droit, l'économie, psychologie...)
 
     <br>
 
-    Pourtant on remarque les D.E infirmiers sont plus demandés alors que les IFSI sont seulement le troisième type de diplôme le plus demandé.
+    Pourtant on remarque les <b>D.E infirmiers</b> sont plus demandés alors que les IFSI sont seulement le troisième type de diplôme le plus demandé.
                     
     </div>
     """, unsafe_allow_html=True)
@@ -452,11 +452,11 @@ with tab2:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
 
-    Pour continuer notre analyse de façon plus précises nous décidons d'analyser directement les 10 formations les plus demandées. Lorsqu'on regarde de plus près les formations les plus demandées, ce sont les concours pour accéder aux grandes écoles de commerce ou d'ingénieur qui cumulent le plus de candidats.
+    Pour continuer notre analyse de façon plus précises nous décidons d'analyser directement les 10 formations les plus demandées. Lorsqu'on regarde de plus près les formations les plus demandées, ce sont les <b>concours pour accéder aux grandes écoles</b> de commerce ou d'ingénieur qui cumulent le plus de candidats.
 
     <br>
 
-    Cela s'explique par le fait que ces concours regroupent plusieurs établissements dans lesquels seront répartis les admis. Les licences sont également très demandées puisqu'une université peut proposer plusieurs centaines de licences et qu'on compte environ 2400 licences en France. On retrouve également plusieurs D.E pour devenir infirmier qui étaient la fillière la plus demandée.
+    Cela s'explique par le fait que ces concours <b>regroupent plusieurs établissements</b> dans lesquels seront répartis les admis. Les licences sont également très demandées puisqu'une université peut proposer <b>plusieurs centaines de licences</b> et qu'on compte environ 2400 licences en France. On retrouve également plusieurs D.E pour devenir infirmier qui étaient la fillière la plus demandée.
 
     <br><br>
                     
@@ -477,12 +477,7 @@ with tab3:
         unsafe_allow_html=True
     )
 
-    st.markdown("""
-    <br><br>
-                    
-    </div>
-    """, unsafe_allow_html=True)
-
+    
     col1, col2 = st.columns([0.5, 0.5], gap="small")
 
     with col1:
@@ -579,14 +574,14 @@ with tab3:
 
     st.markdown("""
     On observe des différences importantes de taux d'accès selon les types de formation.
-    Les <span style='color:#E63946'><b>Licences</b></span>, écoles d’ingénieur et écoles de commerce présentent des taux d’accès médians relativement élevés, ce qui signifie qu’une grande partie des candidats obtiennent une proposition.
+    Les <b>Licences</b>, écoles d’ingénieur et écoles de commerce présentent des taux d’accès médians relativement élevés, ce qui signifie qu’une grande partie des candidats obtiennent une proposition.
 
     <br>
                 
-    À l’inverse, les <span style='color:#457B9D'><b>PASS</b></span>, IFSI ou certaines autres formations apparaissent plus sélectives avec des taux d’accès plus faibles et très dispersés.
-    La forte dispersion des boîtes montre également que la sélectivité varie fortement d’un établissement à l’autre au sein d’un même type de formation.
+    À l’inverse, les <b>PASS</b>, IFSI ou certaines autres formations apparaissent plus sélectives avec des taux d’accès plus faibles et très dispersés.
+    La forte dispersion des boîtes montre également que la sélectivité <b>varie fortement d’un établissement à l’autre</b> au sein d’un même type de formation.
 
-    <br><br>
+    <br>
     </div>
     """, unsafe_allow_html=True)
 
@@ -701,15 +696,15 @@ with tab3:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    Sauf quelques exceptions les licences sont le type de formation qui a majoritairement la plus grande capacité d'accueil (bien que certaines aient une plus petite capacité).
+    Sauf quelques exceptions les <b>licences</b> sont le type de formation qui a majoritairement la plus grande capacité d'accueil (bien que certaines aient une plus petite capacité).
                     
     <br>
 
-    Plus précisément les licences qui ont la plus grande capacité sont des licences de droit ou de psyhologie qui peuvent accueillir le plus d'admis.  
+    Plus précisément les licences qui ont la plus grande capacité sont des <b>licences de droit ou de psyhologie</b> qui peuvent accueillir le plus d'admis.  
                     
     <br>
 
-    Si on regarde de plus près les quelques formations avec le plus de capacité on trouve plusieurs BTS en distanciel et qui pour certains d'entre eux peuvent accueillir jusqu'à 3400 admis lse formations en distanciel n'étant pas soumises aux mêmes restrictions logistiques que les formations en présentiel.  
+    Si on regarde de plus près les quelques formations avec le plus de capacité on trouve plusieurs <b>BTS en distanciel</b> et qui pour certains d'entre eux peuvent accueillir jusqu'à 3400 admis lse formations en distanciel n'étant pas soumises aux mêmes restrictions logistiques que les formations en présentiel.  
     
 
     </div>
@@ -726,7 +721,7 @@ with tab3:
                     
     <br>
                     
-    Sauf quelques exceptions les licences sont le type de formation qui a majoritairement la plus grande capacité d'accueil (bien que certaines aient une plus petite capacité).
+    Sauf quelques exceptions les licences sont le type de formation qui a majoritairement la <b>plus grande capacité d'accueil</b> (bien que certaines aient une plus petite capacité).
                     
     <br>
 
@@ -931,10 +926,10 @@ with tab4:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    Les femmes sont plus nombreuses que les hommes au niveau des admissions avec environ 82 000 femmes en plus. Elles ont également effectué plus de voeux que les hommes avec une grosse différence de presque 2 millions de voeux. 
+    Les femmes sont plus nombreuses que les hommes au niveau des admissions avec environ <b>82 000 femmes en plus</b>. Elles ont également effectué plus de voeux que les hommes avec une grosse différence de presque 2 millions de voeux. 
     <br>
                     
-    Néanmoins lorsqu'on regarde de plus près si on divise le nombre de voeux par le nombre d'admissions (qu'on utilise pour avoir le nombre de candidats uniques) on s'aperçoit que les hommes et les femmes ont fait en moyenne 20 voeux chacuns. Il n'y donc pas de gros écart de genre sur la plateform.
+    Néanmoins lorsqu'on regarde de plus près si on divise le nombre de voeux par le nombre d'admissions (qu'on utilise pour avoir le nombre de candidats uniques) on s'aperçoit que les <b>hommes et les femmes ont fait en moyenne 20 voeux</b> chacuns. Il n'y donc pas de gros écart de genre sur la plateform.
                     
     </div>
     """, unsafe_allow_html=True)
@@ -951,14 +946,14 @@ with tab4:
         st.markdown("""
     <div style='text-align: justify; padding-top:25px; font-size: 16px; line-height:1.8'>
                     
-    Globalement on observe une surreprésensation des femmes dans les candidatures et admissions dans la majorité des types de formations. 
-    Plus particulièrement dans les EFTS, IFSI, Licences, Licences LAS, PASS et les autres formations. Les EFTS et IFSI sont les formations avec le plus haut taux de candidates et admises (entre 80 et 90%). 
+    Globalement on observe une <b>surreprésensation des femmes</b> dans les candidatures et admissions dans la majorité des types de formations. 
+    Plus particulièrement dans les EFTS, IFSI, Licences, Licences LAS, PASS et les autres formations. Les <b>EFTS et IFSI</b> sont les formations avec le plus haut taux de candidates et admises (entre 80 et 90%). 
     <br>
 
-    Cela peut peut-être s'expliquer au niveau sociologique par le fait que les métiers du social et d'infirmier soient vus comme "typiquement féminins". Au contraire les hommes eux sont plus présents dans les BTS, BUT, CPGE, écoles d'ingénieur et écoles de commerce.                                
+    Cela peut peut-être s'expliquer au niveau sociologique par le fait que les <b>métiers du social et d'infirmier</b> soient vus comme "typiquement féminins". Au contraire les hommes eux sont plus présents dans les BTS, BUT, CPGE, écoles d'ingénieur et écoles de commerce.                                
     <br>     
-    On remarque également une forte corrélation entre les candidatures et les admissions avec des pourcentages relativement similaires (le plus gros écart entre les deux étant 3-4 points de pourcentage). 
-    Cela signifie qu'au niveau du genre on ne peut pas supposer de fortes inégalités ou discriminations par rapport au genre selon les types de formations puisque les tendances des candidatures suivent celles des candidatures. 
+    On remarque également une forte <b>corrélation entre les candidatures et les admissions</b> avec des pourcentages relativement similaires (le plus gros écart entre les deux étant 3-4 points de pourcentage). 
+    Cela signifie qu'au niveau du genre on ne peut <b>pas supposer de fortes inégalités ou discriminations</b> par rapport au genre selon les types de formations puisque les tendances des candidatures suivent celles des candidatures. 
     </div>
     """, unsafe_allow_html=True)
 
@@ -1173,10 +1168,10 @@ with tab5:
     <div style='text-align: justify; adding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    L'analyse géographique est intéressante puisque c'est un point qui est souvent rappelé puisque la région Ile-de-France est la région la plus riche à l'échelle nationale. Les inégalités régionales peuvent se repercuter sur les candidats puisque les régions financent en partie certaines bourses et des infrastructures.
+    L'analyse géographique est intéressante puisque c'est un point qui est souvent rappelé puisque la région Ile-de-France est la <b>région la plus riche à l'échelle nationale</b>. Les inégalités régionales peuvent se repercuter sur les candidats puisque les <b>régions financent</b> en partie certaines bourses et des infrastructures.
     <br>
 
-    La région qui regroupe le plus de formations sur ParcourSup est de loin l'Ile-de-France avec 2691 formations sur ParcourSup. Si on compare avec la deuxième région : Auvergne-Rhône-Alpes il y près de 900 formations de plus en IDF ce qui est plus que le total des formations en Pays-de-la-Loire, Bretagne et Normandie.           
+    La région qui regroupe le plus de formations sur ParcourSup est de loin l'Ile-de-France avec <b>2691 formations sur ParcourSup</b>. Si on compare avec la deuxième région : Auvergne-Rhône-Alpes il y près de 900 formations de plus en IDF ce qui est plus que le total des formations en Pays-de-la-Loire, Bretagne et Normandie.           
     </div>
     """, unsafe_allow_html=True)
 
@@ -1227,12 +1222,11 @@ with tab5:
     st.markdown("""
 
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
-    <br>
+    Sur la heatmap on peut voir que la régions qui a la plus gros nombre de formations est la région <b>Ile-de-France</b> comme nous l'avons vu précedemment. Elle permet également d'avoir le détail des types de formations. 
                     
-    ....
     <br>
-
-    ...                
+                
+    Ainsi, on voit qu'elle a toujours le plus haut nombre de formations sauf pour les <b>PASS</b>. La différence se voit principalement avec les CPGE , licences, écoles de commerce et écoles d'ingénieur où l'IDF a quasiment deux fois plus de formations que les autres régions. On voit également que la formation la plus présente parmis toutes ces régions est le <b>BTS</b>. Cela peut s'expliquer car elles se déroulent généralement dans des lycées et ne nécessite pas l'entretien d'une université.    
     </div>
     """, unsafe_allow_html=True)
 
@@ -1247,20 +1241,25 @@ with tab5:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    ....
+    Maintenant que nous avons déterminé les inégalités en terme de formation, nous voulons voir si les académies d'origine des candidats peuvent affecter leur admission dans certaines formations. 
     <br>
 
-    ...                
+    Pour cela nous calculons le total des admis des académies en IDF et en dehors. On voit qu'il y a une différence de quasiment <b>90 000 candidats</b> entre ceux originaire d'IDF et ceux des autres régions.               
     </div>
     """, unsafe_allow_html=True)
 
 
     with col2:
 
+        # =========================
+        # ADMIS PCV VS AUTRES ACADÉMIES
+        # =========================
+
+        df_plot = df.copy()
 
         cols = [
             'dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)',
-            'dont_effectif_des_admis_issus_de_la_même_academie'
+            'effectif_total_des_candidats_ayant_accepte_la_proposition_de_l’etablissement_(admis)'
         ]
 
         df_plot[cols] = df_plot[cols].apply(
@@ -1270,18 +1269,37 @@ with tab5:
 
         df_plot = df_plot.dropna(subset=cols)
 
-        totaux = df_plot[cols].sum()
+        # admis provenant de Paris / Créteil / Versailles
+        admis_pcv = (
+            df_plot[
+                'dont_effectif_des_admis_issus_de_la_même_academie_(paris/creteil/versailles_reunies)'
+            ]
+            .sum()
+        )
+
+        # total admis
+        total_admis = (
+            df_plot[
+                'effectif_total_des_candidats_ayant_accepte_la_proposition_de_l’etablissement_(admis)'
+            ]
+            .sum()
+        )
+
+        # admis provenant des autres académies
+        admis_autres = total_admis - admis_pcv
+
+        totaux = [admis_pcv, admis_autres]
 
         labels = [
             "Paris / Créteil / Versailles",
-            "Même académie"
+            "Autres académies"
         ]
 
         fig = px.bar(
             x=labels,
-            y=totaux.values,
+            y=totaux,
             color=labels,
-            text=totaux.values,
+            text=totaux,
             color_discrete_sequence=PASTEL_COLORS
         )
 
@@ -1292,13 +1310,20 @@ with tab5:
 
         fig.update_layout(
             title={
-                        'text': f"Comparaison des admis selon l'académie d'origine",
-                        'x': 0.5,
-                        'xanchor': 'center'
-                    },
+                'text': "Comparaison des admis selon l'académie d'origine",
+                'x': 0.5,
+                'xanchor': 'center'
+            },
+
             xaxis_title=None,
             yaxis_title=None,
-            showlegend=False
+
+            showlegend=False,
+
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+
+            font=dict(color="white")
         )
 
         st.plotly_chart(
@@ -1414,11 +1439,11 @@ with tab5:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    On remarque que pour les formations dans les académies de Créteil, Paris et Versailles la majorité des formations ont admis plus de candidats étant néobacheliers dans ces académies sauf pour les autres formations, les IFSI et les EFTS.
+    On remarque que pour les formations dans les académies de Créteil, Paris et Versailles la majorité des formations ont admis plus de candidats étant <b>néobacheliers dans ces académies</b> sauf pour les autres formations, les IFSI et les EFTS.
 
     <br>
 
-    On remarque également que le nombre d'admis dans les licences est quasiment identique pour tous les néobacheliers admis.
+    On remarque également que le nombre d'admis dans les <b>licences</b> est quasiment identique pour tous les néobacheliers admis.
                     
     </div>
     """, unsafe_allow_html=True)
@@ -1435,11 +1460,11 @@ with tab5:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    Quand on regarde pour toutes les formations indépendamment de la région on voit que les élèves issus des académies d'Île-de-France sont quand même avantagés par rapport aux autres dans la majorité des formations.
+    Quand on regarde pour toutes les formations indépendamment de la région on voit que les élèves issus des académies d'Île-de-France sont quand même <b>avantagés</b> par rapport aux autres dans la majorité des formations.
 
     <br>
 
-    Les formations avec le plus d'égalité dans les admissions sont les écoles d'ingénieur, écoles de commerce, IFSI, EFTS et Licences.
+    Les formations avec le plus d'égalité dans les admissions sont les <b>écoles d'ingénieur, écoles de commerce, IFSI, EFTS et Licences</b>.
                     
     </div>
     """, unsafe_allow_html=True)
@@ -1534,13 +1559,10 @@ with tab5:
     st.markdown("""
 
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
+    Nous avons donc vu que malgré la différence d'admis selon les académies d'origine on peut quand même voir se dégager quelques <b>tendances selon les formations</b>.
                     
-    <br>
-
-                
     </div>
     """, unsafe_allow_html=True)
-
 # =========================
 # SELECTIVITE
 # =========================
@@ -1633,10 +1655,10 @@ with tab6:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    ...
+    Certaines formations sont dites <b>sélectives</b>. Afin de voir lesquelle on mesure le pourcentage des formations non sélectives au sein de tous les types de formation. 
     <br>
 
-    ...                
+    Le résultat est que tous 100% des PASS ne sont pas sélectives, 98% des Licences Las le sont et c'est aussi le cas de 78% des licences. Toutes les <b>autres formations sont donc sélectives</b>.
     </div>
     """, unsafe_allow_html=True)
 
@@ -1651,11 +1673,11 @@ with tab6:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    ...
+    Les formations n'ont pas les mêmes attentes pour le <b>parcours</b> de leurs candidats. Certaines formations privilégient les bac généraux et d'autres les professionnels.
     <br>
 
-    ...                
-    </div>r
+    Ici nous voyons que les issus de fillière générale sont admis à peu près partout sauf en <b>BTS</b> où ils sont 17%. Les fillières les moins accessibles pour les bac autres que généraux sont les PASS, licence Las et Licences qui sont <b>pourtant désignées comme non-sélectives</b>.             
+    </div>
     """, unsafe_allow_html=True)
 
     with col2:
@@ -1847,11 +1869,11 @@ with tab6:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    ...
+    On peut se demander si une corrélation existe entre les <b>mentions au baccalauréat et les admissions</b>. A priori dans toutes les formations la majorité des admis n'ont pas eu de mention ou ont eu la mention "assez bien".
     <br>
 
-    ...                
-    </div>r
+    Pour les <b>CPGE, les écoles d'ingénieurs et les PASS</b> plus de 20% des admis ont eu une mention très bien. Les classes préparatoires sont également la formation qui a le plus d'admis qui ont eu les félicitations (8%). Celà s'explique par le fait que ces 3 types de formations ont des parcours exigeants reservés aux <b>profils académiques</b>.      
+    </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
@@ -1883,11 +1905,11 @@ with tab7:
     <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
     <br>
                     
-    ...
+    Dans la majorité des formations, les boursiers représentent entre <b>10% à 30% des admis</b>. Ils sont majoritaires dans les BTS (30%), les IFSI (24%) et les licences (21%).
     <br>
 
-    ...                
-    </div>r
+    Les formations qui ont le moins d'admis boursiers sont les <b>écoles d'ingénieur et écoles de commerce</b>. La majorité de ces écoles sont <b>payantes</b> ce qui peut expliquer la faible proportion d'admis boursiers.                
+    </div>
     """, unsafe_allow_html=True)
         
 
@@ -1979,3 +2001,5 @@ with tab7:
             use_container_width=True,
             key="boursiers_vs_non"
         )
+
+    
