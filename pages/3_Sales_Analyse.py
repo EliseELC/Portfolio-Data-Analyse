@@ -209,11 +209,12 @@ df_filtre = df[
 # TABS
 # =========================
 
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, = st.tabs([
     "🧹Pre-cleaning",
     "📊Dashboard",
-    "📈Analyse",
+    "📈Analyses et recommandations",
     "📖Dataset"
+    
 ])
 
 
@@ -884,9 +885,321 @@ with tab2:
 
 with tab3:
 
-    st.title("📈Analyse")
+    st.title("Analyses et recommandations")
+
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Performances générales</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+        
+        
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyse:</b>
+            <ul>
+                <li>CA élevé (~4.3M) avec 1500 commandes → activité solide</li>
+                <li>Panier moyen élevé (~2900$) → positionnement premium</li>
+                <li>Forte variabilité des ventes dans le temps → instabilité / dépendance à événements</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+               
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+             <b>Recommandations:</b>
+            <ul>
+                <li>Lisser l’activité via des campagnes régulières (pas uniquement pics)</li>
+                 <li>Capitaliser sur le panier élevé (upsell / cross-sell)</li>
+                <li>Analyser les périodes de pics (promotions, saisonnalité)</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+        
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Performances par région</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+        
+        
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyse:</b>
+            <ul>
+                <li>Meilleure région = North (~22%)</li>
+                <li>Répartition globalement équilibrée (18–22%) → pas de dépendance forte</li>
+                <li>South légèrement en retrait</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+                
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Recommandations:</b>
+            <ul>
+                <li>Renforcer investissements sur North (zone performante)</li>
+                 <li>Identifier les causes de sous-performance de South</li>
+                <li>Tester des stratégies locales (pricing / marketing)</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+        
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Performances par produit</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+      
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyse:</b>
+            <ul>
+                <li>Vente des produits globalement équilibrées (~11%–16%)</li>
+                <li>Tablet et Laptop en tête</li>
+                <li>Desk et Phone plus faibles</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+               
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Recommandations:</b>
+            <ul>
+                <li>Mettre en avant produits top performers (tablet et laptop)</li>
+                 <li>Revoir la stratégie des produits faibles (pricing, visibilité)</li>
+                <li>Créer des bundles produits (ex : Laptop + accessoires)</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Top produits par région</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+                
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyses:</b>
+            <ul>
+                <li>Variations fortes des ventes top prdouits selon régions</li>
+                <li>Certains produits performent mieux localement</li>
+                <li>Pas de produit dominant universel</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+        
+        
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Recommandations:</b>
+            <ul>
+                <li>Adapter l'offre selon la région</li>
+                 <li>Personnaliser les campagnes marketing</li>
+                <li>Optimiser les stocks selon les zones et les performances des produits</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
 
 
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Modes de paiement</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+                
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyses:</b>
+            <ul>
+                <li>Online = méthode dominante</li>
+                <li>Cash encore élevé</li>
+                <li>Carte bancaire moins utilisée que prévu</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+        
+        
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Recommandations:</b>
+            <ul>
+                <li>Optimiser l'expérience online (UX, checkout)</li>
+                 <li>Encourager le paiement digital (réductions, incentives)</li>
+                <li>Réduire la dépendance au cash</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Livraison</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+      
+        
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyses:</b>
+            <ul>
+                <li>Livraison moyenne : 6 jours</li>
+                <li>Écart important (2 à 10 jours) → inconsistance</li>
+                <li>Coût de livraison non négligeable (~27$)</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+      
+        
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Recommandations:</b>
+            <ul>
+                <li>Réduire la variabilité des délais</li>
+                 <li>Optimiser la logistique sur zones lentes</li>
+                <li>Tester les options de livraison premium (+ rapide)</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Performance par vendeur</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+                
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyses:</b>
+            <ul>
+                <li>Top vendeurs (Bob et Alice) dominent</li>
+                <li>Écart notable avec les autres</li>
+                <li>Performance non homogène</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+                
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Recommandations:</b>
+            <ul>
+                <li>Analyser les bonnes pratiques des top vendeurs</li>
+                 <li>Former les moins performants</li>
+                <li>Mettre en place des objectifs / incentives</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+        
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Retours produits</h2>",
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
+    with col1:
+                
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Analyses:</b>
+            <ul>
+                <li>Chair = plus de retours (~28%)</li>
+                <li>Laptop / Monitor aussi élevés</li>
+                <li>Desk = le plus faible</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+                
+        st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            <b>Recommandations:</b>
+            <ul>
+                <li>Investiguer les causes (qualité, attentes client)</li>
+                 <li>Améliorer les fiches produits</li>
+                <li>Optimiser le SAV sur les produits à risque</li>
+                
+            </ul>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    st.markdown(
+        "<h2 style='color:#A2D2FF;'>Conclusion globale</h2>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown("""
+            <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
+            Les ventes et performances sont solides mais présente quelques points à améliorer comme la variabilité des ventes selon les périodes, les problèmes de livaison et le retour élevé de certains produits.
+            Les opportunités envisageables sont l'optimisation régionale (adaptation de l'offre et des campagnes), l'amélioration de l'expérience client (paiement, livraison) et la meilleure exploitation des données pour l'optimisation du chiffre d'affaires. 
+            """, unsafe_allow_html=True)
 
 
 with tab4:
