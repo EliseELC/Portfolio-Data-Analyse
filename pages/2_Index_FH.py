@@ -50,18 +50,12 @@ st.markdown("""
 
 /* Fond principal */
 .stApp {
-    background: linear-gradient(
-        135deg,
-        #880D1E 0%,
-        #A4133C 35%,
-        #DD2D4A 100%
-    );
+    background: #590d22;
 }
 
-/* Sidebar -> transparente */
+/* Sidebar */
 section[data-testid="stSidebar"] {
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(8px);
+    background: #590d22;
     border-right: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -83,12 +77,12 @@ p, li {
 
 /* KPI cards */
 [data-testid="metric-container"] {
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
-    padding: 18px;
+    padding: 0 !important;
     border-radius: 18px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: none !important;
+    backdrop-filter: none !important;
 }
 
 /* Valeurs KPI */
@@ -106,18 +100,17 @@ button[data-baseweb="tab"] {
     color: white;
     border-radius: 12px;
     margin-right: 6px;
-    padding: 10px 18px;
 }
 
 button[data-baseweb="tab"][aria-selected="true"] {
-    background: #F26A8D !important;
+    background: rgba(255,255,255,0.16) !important;
     color: white !important;
 }
 
 /* Selectbox / multiselect */
 [data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.08) !important;
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 12px;
     color: white !important;
 }
@@ -141,22 +134,35 @@ input {
 
 /* Dataframe */
 [data-testid="stDataFrame"] {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.03);
     border-radius: 14px;
     overflow: hidden;
+    box-shadow: none !important;
 }
 
 /* Graphiques */
 [data-testid="stPlotlyChart"] {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
     border-radius: 20px;
-    padding: 10px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    overflow: hidden !important;
+}
+
+/* Retirer les scrollbars des conteneurs de graphiques */
+[data-testid="stPlotlyChart"] * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+[data-testid="stPlotlyChart"] *::-webkit-scrollbar {
+    display: none;
 }
 
 /* Containers */
 .block-container {
+    padding-top: 2rem;
 }
 
 /* Radio buttons sidebar */
@@ -169,16 +175,29 @@ label {
     color: white !important;
     font-weight: 600 !important;
 }
-/* Fond dropdown filtres */
-div[data-baseweb="popover"] {
-    background-color: #F49CBB !important;
+
+/* Navigation Streamlit */
+section[data-testid="stSidebarNav"] {
+    background: transparent !important;
 }
 
-/* Fond menu options */
-ul {
-    background-color: #F49CBB !important;
+section[data-testid="stSidebarNav"] a {
+    color: white !important;
 }
-            
+
+section[data-testid="stSidebarNav"] li {
+    background: transparent !important;
+}
+
+/* Dropdown filtres */
+div[data-baseweb="popover"] {
+    background-color: #590d22 !important;
+}
+
+ul {
+    background-color: #590d22 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -233,7 +252,7 @@ df[cols_num] = df[cols_num].apply(
 
 tab1, tab2, tab3, tab4 = st.tabs([
     "Dashboard",
-    "Pre-cleaning",
+    "Présentation des données",
     "Analyse",
     "Dataset"
 ])
@@ -297,13 +316,13 @@ with tab1:
 
     with col2:
         st.metric(
-            "Note d'Index moyenne/100",
+            "Note d'Index moyenne/100pts",
             round(df_filtre["Note Index"].mean(), 1)
         )
 
     with col3:
         st.metric(
-            "Note rémunération moyenne/40",
+            "Note rémunération moyenne/40pts",
             round(df_filtre["Note Ecart rémunération"].mean(), 1)
         )
 
@@ -331,7 +350,7 @@ with tab1:
         )
 
         st.metric(
-        "Note promotions moyenne /35",
+        "Note promotions moyenne /35pts",
         round(df_filtre["Note promotion harmonisée"].mean(), 1)
         )
 
@@ -1038,7 +1057,7 @@ with tab1:
 
         yaxis=dict(
             tickfont=dict(
-                color="white",
+                
                 size=13
             ),
 
@@ -1053,7 +1072,11 @@ with tab1:
             yanchor="top",
             y=-0.25,
             xanchor="center",
-            x=0.5
+            x=0.5,
+            font=dict(
+                color="white",
+                size=12
+            )
         )
     )
     st.plotly_chart(
@@ -1313,13 +1336,24 @@ with tab1:
 
 
 with tab2:
-    st.title("Pre-cleaning")
+    st.title("Présentation des données")
+
+    st.markdown("""
+    <div style='text-align: justify; font-size: 16px; line-height:1.8'>
+
+    L'index d'Egalité Professionnelle F/H permet de <b>mesurer l'égalité salariale</b> entre les femmes et les hommes dans les entreprises de plus de 50 salariés.
+    Le dashboard ci-dessous a été crée dans le but de <b>trouver des tendances</b> et de mieux comprendre le fonctionnement de cet index. 
+    J'ai choisi ce sujet ayant <b>déjà travaillé dessus</b> en 2025 et ayant fourni plusieurs données pour le calcul de cet Index pour l'entreprise Inditex.   
+                
+    Les données proviennent de <b>data.gouv</b> sous le nom "Index Egalité Professionnelle F/H des entreprises de 50 salariés ou plus".
+    """, unsafe_allow_html=True)
 
     st.markdown("""
     <div style='text-align: justify; font-size: 16px; line-height:1.8'>
 
     Voici les différents critères et les points attribués: Rémunération (40 pts), Taux d'augmentation (hors promotion)(20 pts set uniquement si + 250 salariés), Taux de promotion (15 pts et uniquement si + 250 salariés), Taux d'augmentation (35 pts et uniquement si < 250 salariés), Augementation au retour congé maternité (15 pts), % des femmes dans le hautes rémunérations (10pts)
-    Les critères sont donc différents selon la taille de l'entreprise. Pour plus de clarté j'ai décidé de réunir les notes qui diffèrent selon la taille pour n'en attribuer qu'une seule pour calculer les promotions.
+    
+    Les critères sont donc différents selon la taille de l'entreprise. Pour plus de clarté j'ai décidé de <b>réunir les notes qui diffèrent selon la taille</b> pour n'en attribuer qu'une seule pour calculer les promotions.
                 
     
     """, unsafe_allow_html=True)
@@ -1329,15 +1363,7 @@ with tab2:
 with tab3:
     st.title("Analyse")
 
-    st.markdown("""
-    <div style='text-align: justify; font-size: 16px; line-height:1.8'>
-
-    L'index d'Egalité Professionnelle F/H permet de <b>mesurer l'égalité salariale</b> entre les femmes et les hommes dans les entreprises de plus de 50 salariés.
-    Le dashboard ci-dessous a été crée dans le but de <b>trouver des tendances</b> et de mieux comprendre le fonctionnement de cet index. 
-    J'ai choisi ce sujet ayant <b>déjà travaillé dessus</b> en 2025 et ayant fourni plusieurs données pour le calcul de cet Index pour l'entreprise Inditex.   
-                
     
-    """, unsafe_allow_html=True)
 
     st.markdown(
         "<h2 style='color:#A2D2FF;'>1. Performance globale de l’index</h2>",

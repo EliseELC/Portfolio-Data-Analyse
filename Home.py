@@ -1,12 +1,9 @@
 import streamlit as st
 
 
-st.set_page_config(
-    page_title="Portfolio Data Analyse",
-    layout="wide"
-)
 
-st.set_page_config(page_title="Portfolio Data Analyse", layout="wide")
+
+st.set_page_config(page_title="Portfolio Elise Le Chevillier - Data analyse", layout="wide")
 
 st.markdown("""
 <style>
@@ -44,7 +41,7 @@ section[data-testid="stSidebar"] {
 
 
 def home():
-    st.title("Portfolio Data Analyse")
+    st.title("Portfolio Elise Le Chevillier - Data analyse")
     st.markdown("""
     Bienvenue sur mon portfolio de projets Data Analyse !
     Cliquez sur un des projets sur le menu à gauche pour accéder à la page. 
@@ -75,7 +72,7 @@ def home():
                     
         J'ai créé ce portfolio afin de démontrer mes compétences en nettoyage, analyse de données et de présentation. 
         Il a été réalisé sur Streamlit, une bibliothèque Python qui permet de créer des applications web. 
-        Pour chaque projet j'ai également utilisé Numpy et Pandas pour les calculs et Matplotlib et Plotly Express pour les visualisations. 
+        Pour chaque projet j'ai également utilisé Numpy et Pandas pour le traitement des données et Matplotlib et Plotly pour les visualisations. 
         
         <br>
         
@@ -157,7 +154,7 @@ def home():
         <div style='text-align: justify; padding-top:25px; font-size: 16px; line-height:1.8'>
         La licence Humanités est une formation sélective comparable à une classe préparatoire. Elle se compose d'un tronc <b>"humanités" (histoire, littéraire, philosophie)</b> tout en intégrant des cours plus analytiques comme de <b>l'économie, du droit et de la gestion</b>. 
         
-        Cette formation m'a permis de développper ma <b>culture générale</b> tout en approfondissant mes connaissances dans des domaines plus spécialisés. L'aspect <b>pluridisciplinaire</b> m'a particulièrement plu.   
+        Cette formation m'a permise de développper ma <b>culture générale</b> tout en approfondissant mes connaissances dans des domaines plus spécialisés. L'aspect <b>pluridisciplinaire</b> m'a particulièrement plu.   
                         
         """, unsafe_allow_html=True)
         
@@ -206,7 +203,7 @@ def home():
         <div style='text-align: justify; ; padding-top:25px; font-size: 16px; line-height:1.8'>
         J'ai rejoint Inditex (maison-mère de Zara) en tant que <b>Data Analyst</b> au sein du département Diversité et Inclusion qui s'occupe de gérer plusieurs projets et de mettre en avant les valeurs du groupe. Mon alternance étant une <b>création de poste</b> j'ai pu travailler avec une grande autonomie, proposer des process et gérer plusieurs projets importants. 
         
-        J'ai travaillé en étroite collaboration avec le service RH et développement durable. Toutes les analyses que j'ai pu fournir se basaient sur des données issues de la <b>base de données SQL interne</b> qui contient toutes les informations des salariés. Bien comprendre cet outil a été capital afin de faire des extractions afin de <b>calculer et de fournir des KPI justes pour des audits</b>.       
+        J'ai travaillé en étroite collaboration avec le service RH et développement durable. Toutes les analyses que j'ai pu fournir se basaient sur des données issues de la <b>base de données SQL interne</b> qui contient toutes les informations des salariés. Bien comprendre cet outil a été capital afin de faire des extractions, de <b>calculer et de fournir des KPI justes pour des audits</b>.       
                         
                 
         """, unsafe_allow_html=True)
@@ -244,9 +241,9 @@ def home():
         st.markdown("""
         <div style='text-align: justify; ; padding-top:25px; font-size: 16px; line-height:1.8'>
         Orsenna est une <b>ESN</b> spécialisée dans le monitoring de parcs informatiques. Durant cette alternance j'avais la charge de tout l'aspect numérique comme le site web, le SEO, les publicités mais également tout l'aspect évènementiel. 
-        Pendant ces deux années j'ai pu découvrir le B2B et découvrir le monde de l'informatique. 
+        Pendant ces deux années j'ai pu découvrir le B2B et le monde de l'informatique. 
         
-        J'ai eu l'opportunité d'effectuer une <b>montée en compétence</b> lors du départ de mon responsable et j'ai repris ses sujets comme la <b>gestion des partenariats et l'affectation du budget</b> marketing avec ceux-ci. Cette expérience a été très enrichissante car je ne connaissais pas du tout le B2B et les ESN et la <b>technicité</b> requise pour le marketing et la communication auprès d'experts dans le métier (DSI). L'aspect qui m'a le plus plu était <b>l'analyse des données du site et des performances</b> des évènements et c'est ce qui m'a poussé à effectuer une <b>reconversion</b> dans la data.
+        J'ai eu l'opportunité d'effectuer une <b>montée en compétence</b> lors du départ de mon responsable et j'ai repris ses sujets comme la <b>gestion des partenariats et l'affectation du budget</b> marketing avec ceux-ci. Cette expérience a été très enrichissante car je ne connaissais pas du tout le B2B, les ESN et la <b>technicité</b> requise pour le marketing et la communication auprès d'experts dans le métier (DSI). L'aspect qui m'a le plus plu était <b>l'analyse des données du site et des performances</b> des évènements et c'est ce qui m'a poussé à effectuer une <b>reconversion</b> dans la data.
                     
         """, unsafe_allow_html=True)
 

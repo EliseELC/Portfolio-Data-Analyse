@@ -8,8 +8,10 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("Analyse des voeux sur Parcoursup et détail des formations (session 2025)")
-   
+st.markdown(
+        "<h1 style='color:#A2D2FF;'>Analyse des voeux sur Parcoursup et détail des formations (session 2025)</h1>",
+        unsafe_allow_html=True
+    )
 
 PASTEL_SCALE = [
     [0.0, "#FADADD"],
@@ -46,16 +48,7 @@ def load_data():
 
 df = load_data()
 
-st.markdown("""
-<div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>            
-Bienvenue dans cette analyse exploratoire des données Parcoursup.            
-Le dataframe utilisé provient de data.gouv sous le  nom "Parcoursup 2025 - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements". Il contient le détail de chaque formation proposée et pour chacune le nombre de candidats, admis...
-<br><br>
-Ce jeu de données est très complet et contient donc des informations correctes. Au préalable de nos analyses nous avons modifié le nom des colonnes et réalisé des analyses exploratoires qui ne seront pas présentes sur cette page pour nous assurer de la cohérence des données.
-<br><br>
-            
-</div>
-""", unsafe_allow_html=True)
+
 
 df.columns = (
     df.columns
@@ -102,7 +95,8 @@ df_plot['effectif_total_candidats'] = pd.to_numeric(
     errors='coerce'
 )
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+    "Présentation des données",
     "Chiffres clés",
     "Visualisations générales",
     "sélectivité et capacité",
@@ -111,8 +105,19 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "Sélection des admis",
     "Boursiers"
 ])
-
 with tab1:
+    st.markdown("""
+    <div style='text-align: justify; padding-top:25px; font-size: 16px; line-height:1.8'>            
+    Bienvenue dans cette analyse exploratoire des données Parcoursup 2025.            
+    Le dataframe utilisé provient de <b>data.gouv</b> sous le  nom "Parcoursup 2025 - vœux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements". Il contient le détail de <b>chaque formation proposée</b> et pour chacune le nombre de candidats, admis...
+    <br><br>
+    Ce jeu de données est <b>très complet</b> et contient donc des informations correctes. Au préalable de nos analyses nous avons effectué plusieurs <b>analyses exploratoire</b> pour mieux nous familiriaser avec le dataset, modifié le nom de certaines colonnes pour nous assurer de la cohérence des données et faciliter les visualisations.
+    <br><br>
+                
+    </div>
+    """, unsafe_allow_html=True)
+
+with tab2:
     st.markdown(
         "<h2 style='color:#A2D2FF;'>Chiffres clés</h2>",
         unsafe_allow_html=True
@@ -170,7 +175,7 @@ with tab1:
     </div>
     """, unsafe_allow_html=True)
 
-with tab2:
+with tab3:
 
     st.markdown(
         "<h2 style='color:#A2D2FF;'>Visualisations générales</h2>",
@@ -470,7 +475,7 @@ with tab2:
 # BOXPLOT
 # =========================
 
-with tab3:
+with tab4:
 
     st.markdown(
         "<h2 style='color:#A2D2FF;'>Analyse par sélectivité et capacité</h2>",
@@ -584,6 +589,95 @@ with tab3:
     <br>
     </div>
     """, unsafe_allow_html=True)
+
+    col1, col2 = st.columns([0.4, 0.6], gap="small")
+    
+
+    with col1:
+
+        st.markdown("""
+
+    <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
+    <br>
+                    
+    Certaines formations sont dites <b>sélectives</b>. Afin de voir lesquelle on mesure le pourcentage des formations non sélectives au sein de tous les types de formation. 
+    <br>
+
+    Le résultat est que tous 100% des PASS ne sont pas sélectives, 98% des Licences Las le sont et c'est aussi le cas de 78% des licences, cela veut dire qu'elles sont <b>obligées de classer tous les candidats</b> même si elles ne peuvent pas tous les accueillir. Toutes les <b>autres formations sont donc sélectives</b>.
+    </div>
+    """, unsafe_allow_html=True)
+        
+    with col2:
+
+        df_plot = df.copy()
+
+        df_plot['type_formation'] = (
+            df_plot['type_formation']
+            .astype(str)
+            .str.strip()
+        )
+
+        df_plot['selectivite'] = (
+            df_plot['selectivite']
+            .astype(str)
+            .str.strip()
+            .str.lower()
+        )
+
+        table = (
+            pd.crosstab(
+                df_plot['type_formation'],
+                df_plot['selectivite'],
+                normalize='index'
+            ) * 100
+        )
+
+        table = table.sort_index().reset_index()
+
+        table_melt = table.melt(
+            id_vars='type_formation',
+            var_name='selectivite',
+            value_name='pourcentage'
+        )
+
+        fig = px.bar(
+            table_melt,
+            x='type_formation',
+            y='pourcentage',
+            color='selectivite',
+            text='pourcentage',
+            barmode='stack',
+            color_discrete_sequence=PASTEL_COLORS
+        )
+
+        fig.update_traces(
+            texttemplate='%{text:.1f}%',
+            textposition='inside'
+        )
+
+        fig.update_layout(
+            title={
+                            'text': f"Répartition de la sélectivité selon le type de formation",
+                            'x': 0.5,
+                            'xanchor': 'center'
+                        },
+            xaxis_title=None,
+            yaxis_title=None,
+            xaxis_tickangle=-45,
+            legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.25,
+            xanchor="center",
+            x=0.25
+        )
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            key="selectivite_types"
+        )
 
     # =========================
     # SCATTER
@@ -823,7 +917,7 @@ with tab3:
 # =========================
 # GENRE
 # =========================
-with tab4:
+with tab5:
 
     st.markdown(
         "<h2 style='color:#A2D2FF;'>Analyse par genre</h2>",
@@ -1108,7 +1202,7 @@ with tab4:
 # REGIONS
 # =========================
 
-with tab5:
+with tab6:
 
     st.markdown(
         "<h2 style='color:#A2D2FF;'>Analyses géographiques</h2>",
@@ -1567,7 +1661,7 @@ with tab5:
 # SELECTIVITE
 # =========================
 
-with tab6:
+with tab7:
 
     st.markdown(
         "<h2 style='color:#A2D2FF;'>Analyse de la selectivité et des admis des formations</h2>",
@@ -1575,93 +1669,7 @@ with tab6:
     )
 
 
-    col1, col2 = st.columns([0.6, 0.4], gap="small")
-    with col1:
-
-        df_plot = df.copy()
-
-        df_plot['type_formation'] = (
-            df_plot['type_formation']
-            .astype(str)
-            .str.strip()
-        )
-
-        df_plot['selectivite'] = (
-            df_plot['selectivite']
-            .astype(str)
-            .str.strip()
-            .str.lower()
-        )
-
-        table = (
-            pd.crosstab(
-                df_plot['type_formation'],
-                df_plot['selectivite'],
-                normalize='index'
-            ) * 100
-        )
-
-        table = table.sort_index().reset_index()
-
-        table_melt = table.melt(
-            id_vars='type_formation',
-            var_name='selectivite',
-            value_name='pourcentage'
-        )
-
-        fig = px.bar(
-            table_melt,
-            x='type_formation',
-            y='pourcentage',
-            color='selectivite',
-            text='pourcentage',
-            barmode='stack',
-            color_discrete_sequence=PASTEL_COLORS
-        )
-
-        fig.update_traces(
-            texttemplate='%{text:.1f}%',
-            textposition='inside'
-        )
-
-        fig.update_layout(
-            title={
-                            'text': f"Répartition de la sélectivité selon le type de formation",
-                            'x': 0.5,
-                            'xanchor': 'center'
-                        },
-            xaxis_title=None,
-            yaxis_title=None,
-            xaxis_tickangle=-45,
-            legend=dict(
-            orientation="h",
-            yanchor="top",
-            y=-0.25,
-            xanchor="center",
-            x=0.5
-        )
-        )
-
-        st.plotly_chart(
-            fig,
-            use_container_width=True,
-            key="selectivite_types"
-        )
-
-    with col2:
-
-        st.markdown("""
-
-    <div style='text-align: justify; padding-top:55px; font-size: 16px; line-height:1.8'>
-    <br>
-                    
-    Certaines formations sont dites <b>sélectives</b>. Afin de voir lesquelle on mesure le pourcentage des formations non sélectives au sein de tous les types de formation. 
-    <br>
-
-    Le résultat est que tous 100% des PASS ne sont pas sélectives, 98% des Licences Las le sont et c'est aussi le cas de 78% des licences. Toutes les <b>autres formations sont donc sélectives</b>.
-    </div>
-    """, unsafe_allow_html=True)
-
+    
     # =========================
     # TYPES DE BAC
     # =========================
@@ -1890,7 +1898,7 @@ with tab6:
 # BOURSIERS
 # =========================
 
-with tab7:
+with tab8:
 
     st.markdown(
         "<h2 style='color:#A2D2FF;'>Présences des admis boursiers dans les formations</h2>",

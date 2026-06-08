@@ -64,15 +64,15 @@ p, label {
 
 /* Tabs */
 button[data-baseweb="tab"] {
-    background: #EEF2FF;
-    color: #374151;
+    background: #bbd0ff;
+    color: #bbd0ff;
     border-radius: 12px;
     margin-right: 6px;
     padding: 10px 18px;
 }
 
 button[data-baseweb="tab"][aria-selected="true"] {
-    background: #2563EB !important;
+    background: #00a8e8 !important;
     color: white !important;
 }
 
@@ -210,7 +210,7 @@ df_filtre = df[
 # =========================
 
 tab1, tab2, tab3, tab4, = st.tabs([
-    "🧹Pre-cleaning",
+    "📋Présentation des données",
     "📊Dashboard",
     "📈Analyses et recommandations",
     "📖Dataset"
@@ -225,10 +225,18 @@ tab1, tab2, tab3, tab4, = st.tabs([
 
 with tab1:
 
-        st.title("🧹Pre-cleaning")
+    st.title("Présentation des données")
 
     #df modifié car chiffres choisis aléatoirement donc pas cohérent niveau profit, cout, prix...#
 
+    st.markdown("""
+    <div style='text-align: justify; font-size: 16px; line-height:1.8'>
+
+    Ce dataset provient du site Excelx.com, C'est un extrait de <b>données de ventes fictives</b> qui permet de s'entraîner à faire des analyses. Je l'ai choisi car malgré le fait qu'il soit fictif ses données etaient quand même <b>cohérentes</b>.   
+
+    Il se concentre sur l'analyse géographique et a différentes colonnes par méthode de paiement, vendeurs et produits par exemple.       
+    
+    """, unsafe_allow_html=True)
 
 
 with tab2:
@@ -1197,7 +1205,7 @@ with tab3:
 
     st.markdown("""
             <div style='text-align: justify; padding-top:25px; font-size:16px; line-height:1.8'>
-            Les ventes et performances sont solides mais présente quelques points à améliorer comme la variabilité des ventes selon les périodes, les problèmes de livaison et le retour élevé de certains produits.
+            Les ventes et performances sont solides mais présentent quelques points à améliorer comme la variabilité des ventes selon les périodes, les problèmes de livaison et le retour élevé de certains produits.
             Les opportunités envisageables sont l'optimisation régionale (adaptation de l'offre et des campagnes), l'amélioration de l'expérience client (paiement, livraison) et la meilleure exploitation des données pour l'optimisation du chiffre d'affaires. 
             """, unsafe_allow_html=True)
 
