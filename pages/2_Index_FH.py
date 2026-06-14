@@ -14,7 +14,7 @@ st.title("Index Egalité professionnelle (2018- 2025)")
 @st.cache_data
 def load_data():
     df = pd.read_excel(
-        r"data\index-egalite-fh.xlsx"
+        r"data/index-egalite-fh.xlsx"
     )
     
     return df
