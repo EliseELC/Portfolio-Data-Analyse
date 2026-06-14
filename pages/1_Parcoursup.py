@@ -38,7 +38,7 @@ PASTEL_COLORS = [
 @st.cache_data
 def load_data():
     df = pd.read_csv(
-        r"../data/fr-esr-parcoursup.csv",
+        "data/fr-esr-parcoursup.csv",
         sep=";",
         encoding="utf-8",
         engine="python",
