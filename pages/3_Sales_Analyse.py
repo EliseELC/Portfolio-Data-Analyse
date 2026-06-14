@@ -127,7 +127,7 @@ DASH_SCALE = [
 def load_data():
 
     df = pd.read_excel(
-        "data/product-Sales.xlsx"
+        "../data/product-Sales.xlsx"
     )
 
     df.columns = df.columns.str.strip()
