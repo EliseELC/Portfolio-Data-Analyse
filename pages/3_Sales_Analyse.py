@@ -13,7 +13,7 @@ st.title("Analyse des ventes 2023-2025")
 def load_data():
 
     df = pd.read_excel(
-        "data/sales.xlsx"
+        "data/product-Sales.xlsx"
     )
 
     df.columns = df.columns.str.strip()
@@ -119,22 +119,7 @@ DASH_SCALE = [
     [1.0, "#1D4ED8"]
 ]
 
-# =========================
-# DATA
-# =========================
 
-@st.cache_data
-def load_data():
-
-    df = pd.read_excel(
-        "data/product-Sales.xlsx"
-    )
-
-    df.columns = df.columns.str.strip()
-
-    return df
-
-df = load_data()
 
 # =========================
 # PREP DATA
