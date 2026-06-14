@@ -13,7 +13,7 @@ st.title("Analyse des ventes 2023-2025")
 def load_data():
 
     df = pd.read_excel(
-        r"data\sales.xlsx"
+        "data/sales.xlsx"
     )
 
     df.columns = df.columns.str.strip()
